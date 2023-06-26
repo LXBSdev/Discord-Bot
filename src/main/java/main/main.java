@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import java.util.EnumSet;
 
-public class hauptklasse {
+public class main {
     public static void main(String[] args) throws Exception {
 
         String prefix = "/";
@@ -27,9 +27,11 @@ public class hauptklasse {
 
         bauplan.setChunkingFilter(ChunkingFilter.ALL);
         bauplan.setMemberCachePolicy(MemberCachePolicy.ALL);
-        bauplan.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.DIRECT_MESSAGE_TYPING, GatewayIntent.DIRECT_MESSAGES);
+        bauplan.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES,
+                GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.DIRECT_MESSAGE_TYPING, GatewayIntent.DIRECT_MESSAGES);
 
-        EnumSet<CacheFlag> enumSet = EnumSet.of(CacheFlag.ONLINE_STATUS, CacheFlag.CLIENT_STATUS, CacheFlag.EMOTE, CacheFlag.VOICE_STATE);
+        EnumSet<CacheFlag> enumSet = EnumSet.of(CacheFlag.ONLINE_STATUS, CacheFlag.CLIENT_STATUS, CacheFlag.EMOTE,
+                CacheFlag.VOICE_STATE);
 
         bauplan.addEventListeners(new welcome(), new memes(), new commands());
 
