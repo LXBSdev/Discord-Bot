@@ -33,7 +33,7 @@ public class main {
         EnumSet<CacheFlag> enumSet = EnumSet.of(CacheFlag.ONLINE_STATUS, CacheFlag.CLIENT_STATUS, CacheFlag.EMOTE,
                 CacheFlag.VOICE_STATE);
 
-        bauplan.addEventListeners(new welcome(), new memes(), new commands());
+        bauplan.addEventListeners(new welcome(), new memes(), new commands(), new support());
 
         JDA bot = bauplan.build();
         System.out.println("the bot is now online (LXBS Support Bot)!");
