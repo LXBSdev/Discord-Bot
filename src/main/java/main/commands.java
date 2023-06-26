@@ -26,8 +26,9 @@ public class commands extends ListenerAdapter {
 
             emb.setTitle("LXBS Commands");
             emb.setDescription("List of all available commands");
-            emb.setColor(0x212e94);
-            emb.setThumbnail("https://cdn.discordapp.com/attachments/1057707566886563930/1062172326466175016/logo.png");
+            emb.setColor(0xff55ff);
+            emb.setThumbnail(
+                    "https://cdn.discordapp.com/attachments/837779743486378075/1122872440872247437/logo-magenta.png");
             emb.addField("/help", "Get help", true);
             emb.addField("/support", "Get support", true);
             emb.addField("/rules", "Display server rules", true);
