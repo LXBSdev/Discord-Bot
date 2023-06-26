@@ -24,10 +24,10 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
 public class support extends ListenerAdapter {
-    public static Map<Boolean, List<String>> tickets;
+    private static Map<Boolean, List<String>> tickets;
 
     public static void loadTickets() {
-        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("/birthdays.dat"))) {
+        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("tickets.dat"))) {
             tickets = (HashMap<Boolean, List<String>>) inputStream.readObject();
         } catch (FileNotFoundException event) {
             tickets = new HashMap<>();
@@ -37,7 +37,7 @@ public class support extends ListenerAdapter {
     }
 
     private void saveTickets() {
-        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("/birthdays.dat"))) {
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("tickets.dat"))) {
             outputStream.writeObject(tickets);
         } catch (IOException event) {
             event.printStackTrace();
@@ -76,9 +76,11 @@ public class support extends ListenerAdapter {
             ticket.add("ticket ID: " + ticketID.toString());
 
             tickets.put(false, ticket);
+            saveTickets();
         }
 
         if (command.equals("open-ticket")) {
+            loadTickets();
             if (event.getMember().getRoles().toString().contains("Admin")) {
                 List<String> openTickets = tickets.get(false);
 
