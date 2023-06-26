@@ -18,7 +18,7 @@ public class main {
 
         String status = "with friends on lxbs.de";
 
-        String token = "MTA2NTAxNDY2MzgxNDg1NjcyNA.Gn1XPr.zEhDXvKGxT-U565rAJ9fUDGMzxJMvT0iJFaDIA";
+        String token = "";
 
         JDABuilder bauplan = JDABuilder.createDefault(token);
 
