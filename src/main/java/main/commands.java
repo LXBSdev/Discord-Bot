@@ -44,10 +44,6 @@ public class commands extends ListenerAdapter {
             event.replyEmbeds(emb.build()).setEphemeral(true).queue();
         }
 
-        if (command.equals("support")) {
-
-        }
-
         if (command.equals("website")) {
             EmbedBuilder emb = new EmbedBuilder();
 
@@ -169,7 +165,6 @@ public class commands extends ListenerAdapter {
     public void onGuildReady(@NotNull GuildReadyEvent event) {
         List<CommandData> commandData = new ArrayList<>();
         commandData.add(Commands.slash("help", "Get help"));
-        commandData.add(Commands.slash("support", "Get support"));
         commandData.add(Commands.slash("website", "Get the link to our Website"));
         commandData.add(Commands.slash("rules", "Display server rules"));
         commandData.add(Commands.slash("userinfo", "Get info on a user").addOption(OptionType.USER, "user",
@@ -188,7 +183,6 @@ public class commands extends ListenerAdapter {
     public void onGuildJoin(@NotNull GuildJoinEvent event) {
         List<CommandData> commandData = new ArrayList<>();
         commandData.add(Commands.slash("help", "Get help"));
-        commandData.add(Commands.slash("support", "Get support"));
         commandData.add(Commands.slash("website", "Get the link to our Website"));
         commandData.add(Commands.slash("rules", "Display server rules"));
         commandData.add(Commands.slash("userinfo", "Get info on a user").addOption(OptionType.USER, "user",
