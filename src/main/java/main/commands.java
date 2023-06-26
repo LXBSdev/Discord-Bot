@@ -39,7 +39,7 @@ public class commands extends ListenerAdapter {
             emb.addField("/rickroll", "Rick-roll someone", true);
             emb.addField("/ip", "Get Minecraft Server IP", true);
             emb.addField("", "", false);
-            emb.addField("More Info: ", "[lxbs.de](https://lxbs.de)", false);
+            emb.addField("More Infos: ", "[lxbs.online](https://lxbs.online)", false);
 
             event.replyEmbeds(emb.build()).setEphemeral(true).queue();
         }
@@ -51,7 +51,7 @@ public class commands extends ListenerAdapter {
         if (command.equals("website")) {
             EmbedBuilder emb = new EmbedBuilder();
 
-            emb.addField("Website", "You can find more Information on our [Website](https://lxbs.de)", false);
+            emb.addField("Website", "You can find more Information on our [Website](https://lxbs.online)", false);
 
             event.replyEmbeds(emb.build()).setEphemeral(true).queue();
         }
@@ -122,6 +122,10 @@ public class commands extends ListenerAdapter {
             event.reply(member.getAsMention()
                     + "\n https://tenor.com/view/keyboard-hyperx-rgb-hyperx-family-hyperx-gaming-gif-17743649").queue();
         }
+
+        if (command.equals("ip")) {
+            event.reply("You can find our Minecraft server at lxbs.online").queue();
+        }
     }
 
     private String getActivities(List activitiesList) {
@@ -169,6 +173,7 @@ public class commands extends ListenerAdapter {
                 "who you want to pay respect to", true));
         commandData.add(Commands.slash("respect", "Pay respect").addOption(OptionType.USER, "user",
                 "who you want to pay respect to", true));
+        commandData.add(Commands.slash("ip", "Get Minecraft Server IP"));
         event.getGuild().updateCommands().addCommands(commandData).queue();
     }
 
@@ -188,6 +193,7 @@ public class commands extends ListenerAdapter {
                 "who you want to pay respect to", true));
         commandData.add(Commands.slash("respect", "Pay respect").addOption(OptionType.USER, "user",
                 "who you want to pay respect to", true));
+        commandData.add(Commands.slash("ip", "Get Minecraft Server IP"));
         event.getGuild().updateCommands().addCommands(commandData).queue();
     }
 
