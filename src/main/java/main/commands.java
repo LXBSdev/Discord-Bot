@@ -33,7 +33,6 @@ public class commands extends ListenerAdapter {
             emb.addField("/help", "Get help", true);
             emb.addField("/support", "Get support", true);
             emb.addField("/rules", "Display server rules", true);
-            emb.addField("/pronouns", "Set your pronouns", true);
             emb.addField("/userinfo", "Get info on a user", true);
             emb.addField("/website", "Get the link to our Website", true);
             emb.addField("/respect", "Pay respect", true);
@@ -47,13 +46,6 @@ public class commands extends ListenerAdapter {
 
         if (command.equals("support")) {
 
-        }
-
-        if (command.equals("pronouns")) {
-            Member member = event.getOption("user").getAsMember();
-            Role role = event.getOption("role").getAsRole();
-
-            event.getGuild().getContorller().addRolesToMember(member, role).queue();
         }
 
         if (command.equals("website")) {
@@ -70,12 +62,17 @@ public class commands extends ListenerAdapter {
             emb.setTitle("LXBS Server Rules");
             emb.setDescription("List of all Server Rules");
             emb.setColor(0x212e94);
-            emb.setThumbnail("https://cdn.discordapp.com/attachments/837779743486378075/1066785374317334689/4385330_Rules1280.png");
+            emb.setThumbnail(
+                    "https://cdn.discordapp.com/attachments/837779743486378075/1066785374317334689/4385330_Rules1280.png");
             emb.addField("1.", "Respektvoller Umgang miteinander", false);
             emb.addField("2.", "kein Rassismus/Nationalsozialismus", false);
             emb.addField("3.", "kein Spam", false);
-            emb.addField("4.", "wer mich \"Otto\" oder \"Flo/Florian\" ohne meine Berechtigung nennt bekommt Time-out von min. 5 Minuten. (man darf mich so nennen wenn amn die \"YESSSSSSSSSSSSS\" Rolle hat)", false);
-            emb.addField("5.", "Leute dürfen nicht als \"Master/Mommy/Daddy\" bezeichnet werden wenn sie nicht die \"you can \"Master\" me..\" Rolle haben. auch hier kann ein Time-out als strafe gegeben werden. !!!bei Verstoß gegen die regeln werde ich verwarnen und/oder die Person Bannen!!!", false);
+            emb.addField("4.",
+                    "wer mich \"Otto\" oder \"Flo/Florian\" ohne meine Berechtigung nennt bekommt Time-out von min. 5 Minuten. (man darf mich so nennen wenn amn die \"YESSSSSSSSSSSSS\" Rolle hat)",
+                    false);
+            emb.addField("5.",
+                    "Leute dürfen nicht als \"Master/Mommy/Daddy\" bezeichnet werden wenn sie nicht die \"you can \"Master\" me..\" Rolle haben. auch hier kann ein Time-out als strafe gegeben werden. !!!bei Verstoß gegen die regeln werde ich verwarnen und/oder die Person Bannen!!!",
+                    false);
             emb.addField("6.", "Bitte respektiere unseren Support", false);
             emb.setFooter("You can find more details in #rules");
 
@@ -98,7 +95,8 @@ public class commands extends ListenerAdapter {
             emb.addField("Status: ", member.getOnlineStatus().toString(), false);
             emb.addField("Game: ", getActivities(member.getActivities()), false);
             emb.addField("Roles: ", getRolesAsString(member.getRoles()), false);
-            emb.addField("Server Bost: ", member.getTimeBoosted() == null ? "Has never boosted this Server" : member.getTimeBoosted().format(fmt), false);
+            emb.addField("Server Bost: ", member.getTimeBoosted() == null ? "Has never boosted this Server"
+                    : member.getTimeBoosted().format(fmt), false);
 
             event.replyEmbeds(emb.build()).setEphemeral(true).queue();
         }
@@ -114,12 +112,15 @@ public class commands extends ListenerAdapter {
 
         if (command.equals("rickroll")) {
             Member member = event.getOption("user").getAsMember();
-            event.reply(member.getAsMention() + "\n https://tenor.com/view/rickroll-roll-rick-never-gonna-give-you-up-never-gonna-gif-22954713").queue();
+            event.reply(member.getAsMention()
+                    + "\n https://tenor.com/view/rickroll-roll-rick-never-gonna-give-you-up-never-gonna-gif-22954713")
+                    .queue();
         }
 
         if (command.equals("respect")) {
             Member member = event.getOption("user").getAsMember();
-            event.reply(member.getAsMention() + "\n https://tenor.com/view/keyboard-hyperx-rgb-hyperx-family-hyperx-gaming-gif-17743649").queue();
+            event.reply(member.getAsMention()
+                    + "\n https://tenor.com/view/keyboard-hyperx-rgb-hyperx-family-hyperx-gaming-gif-17743649").queue();
         }
     }
 
@@ -157,14 +158,17 @@ public class commands extends ListenerAdapter {
         List<CommandData> commandData = new ArrayList<>();
         commandData.add(Commands.slash("help", "Get help"));
         commandData.add(Commands.slash("support", "Get support"));
-        commandData.add(Commands.slash("pronouns", "Set your Pronouns").addOption(OptionType.ROLE, "pronounce", "The Pronounse you want to asign to yourself", true));
         commandData.add(Commands.slash("website", "Get the link to our Website"));
         commandData.add(Commands.slash("rules", "Display server rules"));
         commandData.add(Commands.slash("ip", "get Minecraft server IP"));
-        commandData.add(Commands.slash("userinfo", "Get info on a user").addOption(OptionType.USER, "user", "The user you want info on", true));
-        commandData.add(Commands.slash("hello", "Say hello").addOption(OptionType.USER, "user", "The user you want to say hello to", false));
-        commandData.add(Commands.slash("rickroll", "Rick-roll someone").addOption(OptionType.USER, "user", "who you want to pay respect to", true));
-        commandData.add(Commands.slash("respect", "Pay respect").addOption(OptionType.USER, "user", "who you want to pay respect to", true));
+        commandData.add(Commands.slash("userinfo", "Get info on a user").addOption(OptionType.USER, "user",
+                "The user you want info on", true));
+        commandData.add(Commands.slash("hello", "Say hello").addOption(OptionType.USER, "user",
+                "The user you want to say hello to", false));
+        commandData.add(Commands.slash("rickroll", "Rick-roll someone").addOption(OptionType.USER, "user",
+                "who you want to pay respect to", true));
+        commandData.add(Commands.slash("respect", "Pay respect").addOption(OptionType.USER, "user",
+                "who you want to pay respect to", true));
         event.getGuild().updateCommands().addCommands(commandData).queue();
     }
 
@@ -173,14 +177,17 @@ public class commands extends ListenerAdapter {
         List<CommandData> commandData = new ArrayList<>();
         commandData.add(Commands.slash("help", "Get help"));
         commandData.add(Commands.slash("support", "Get support"));
-        commandData.add(Commands.slash("pronouns", "Set your Pronouns"));
         commandData.add(Commands.slash("website", "Get the link to our Website"));
         commandData.add(Commands.slash("rules", "Display server rules"));
         commandData.add(Commands.slash("ip", "get Minecraft server IP"));
-        commandData.add(Commands.slash("userinfo", "Get info on a user").addOption(OptionType.USER, "user", "The user you want info on", true));
-        commandData.add(Commands.slash("hello", "Say hello").addOption(OptionType.USER, "user", "The user you want to say hello to", false));
-        commandData.add(Commands.slash("rickroll", "Rick-roll someone").addOption(OptionType.USER, "user", "who you want to pay respect to", true));
-        commandData.add(Commands.slash("respect", "Pay respect").addOption(OptionType.USER, "user", "who you want to pay respect to", true));
+        commandData.add(Commands.slash("userinfo", "Get info on a user").addOption(OptionType.USER, "user",
+                "The user you want info on", true));
+        commandData.add(Commands.slash("hello", "Say hello").addOption(OptionType.USER, "user",
+                "The user you want to say hello to", false));
+        commandData.add(Commands.slash("rickroll", "Rick-roll someone").addOption(OptionType.USER, "user",
+                "who you want to pay respect to", true));
+        commandData.add(Commands.slash("respect", "Pay respect").addOption(OptionType.USER, "user",
+                "who you want to pay respect to", true));
         event.getGuild().updateCommands().addCommands(commandData).queue();
     }
 
