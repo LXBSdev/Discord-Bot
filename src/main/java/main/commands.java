@@ -127,7 +127,12 @@ public class commands extends ListenerAdapter {
         }
 
         if (command.equals("ip")) {
-            event.reply("You can find our Minecraft server at lxbs.online").queue();
+
+            EmbedBuilder emb = new EmbedBuilder();
+
+            emb.addField("IP", "You can find our Minecraft server at [lxbs.online](https://lxbs.online)", false);
+
+            event.replyEmbeds(emb.build()).setEphemeral(true).queue();
         }
     }
 
