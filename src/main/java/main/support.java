@@ -67,7 +67,7 @@ public class support extends ListenerAdapter {
             emb.addField("Topic: ", topic, false);
             emb.addField("Message: ", message, false);
             emb.addField("TicketID: ", ticketID.toString(), false);
-            event.getGuild().getTextChannelById("1059792277452623872").sendMessageEmbeds(emb.build()).queue();
+            event.getGuild().getTextChannelById("1122870579809243196").sendMessageEmbeds(emb.build()).queue();
 
             List<String> ticket = new ArrayList<>();
             ticket.add("user: " + user.toString());
