@@ -102,12 +102,15 @@ public class commands extends ListenerAdapter {
         }
 
         if (command.equals("hello")) {
-            Member member = event.getOption("user").getAsMember();
-            if (member != null) {
-                event.reply("Hi! " + member.getAsMention() + " Nice to see you.").queue();
+            Member member;
+
+            if (event.getOption("user") != null) {
+                member = event.getOption("user").getAsMember();
             } else {
-                event.reply("Hi! Nice to see you.").queue();
+                member = event.getMember();
             }
+
+            event.reply("Hi! " + member.getAsMention() + " Nice to see you.").queue();
         }
 
         if (command.equals("rickroll")) {
@@ -164,7 +167,6 @@ public class commands extends ListenerAdapter {
         commandData.add(Commands.slash("support", "Get support"));
         commandData.add(Commands.slash("website", "Get the link to our Website"));
         commandData.add(Commands.slash("rules", "Display server rules"));
-        commandData.add(Commands.slash("ip", "get Minecraft server IP"));
         commandData.add(Commands.slash("userinfo", "Get info on a user").addOption(OptionType.USER, "user",
                 "The user you want info on", true));
         commandData.add(Commands.slash("hello", "Say hello").addOption(OptionType.USER, "user",
@@ -184,7 +186,6 @@ public class commands extends ListenerAdapter {
         commandData.add(Commands.slash("support", "Get support"));
         commandData.add(Commands.slash("website", "Get the link to our Website"));
         commandData.add(Commands.slash("rules", "Display server rules"));
-        commandData.add(Commands.slash("ip", "get Minecraft server IP"));
         commandData.add(Commands.slash("userinfo", "Get info on a user").addOption(OptionType.USER, "user",
                 "The user you want info on", true));
         commandData.add(Commands.slash("hello", "Say hello").addOption(OptionType.USER, "user",
