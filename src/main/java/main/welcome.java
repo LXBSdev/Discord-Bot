@@ -1,5 +1,7 @@
 package main;
 
+import javax.annotation.Nonnull;
+
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -7,7 +9,7 @@ import net.dv8tion.jda.api.entities.*;
 
 public class welcome extends ListenerAdapter {
 
-    public void onGuildMemberJoin(GuildMemberJoinEvent event) {
+    public void onGuildMemberJoin(@Nonnull GuildMemberJoinEvent event) {
 
         User user = event.getUser();
         Member member = event.getMember();

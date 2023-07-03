@@ -1,11 +1,13 @@
 package main;
 
+import javax.annotation.Nonnull;
+
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class memes extends ListenerAdapter {
 
-    public void onMessageReceived(MessageReceivedEvent event) {
+    public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
 
         if (event.isFromGuild()) {
             if (!event.getAuthor().isBot()) {
