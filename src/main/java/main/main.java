@@ -11,14 +11,19 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import java.util.EnumSet;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 public class main {
+
+    private final Dotenv config;
+
     public static void main(String[] args) throws Exception {
+        config = Dotenv.configure().load();
+        String token = config.get("TOKEN");
 
         String prefix = "/";
 
         String status = "with friends on lxbs.de";
-
-        String token = "";
 
         JDABuilder bauplan = JDABuilder.createDefault(token);
 
@@ -33,7 +38,7 @@ public class main {
         EnumSet<CacheFlag> enumSet = EnumSet.of(CacheFlag.ONLINE_STATUS, CacheFlag.CLIENT_STATUS, CacheFlag.EMOTE,
                 CacheFlag.VOICE_STATE);
 
-        bauplan.addEventListeners(new welcome(), new memes(), new commands(), new support());
+        bauplan.addEventListeners(new welcome(), new memes(), new commands());
 
         JDA bot = bauplan.build();
         System.out.println("the bot is now online (LXBS Support Bot)!");
