@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -56,12 +57,11 @@ public class support extends ListenerAdapter {
         if (event.getName().equals("ticket")) {
             ObjectMapper mapper = new ObjectMapper();
             ArrayList<Ticket> tickets = new ArrayList<>();
-            HashMap<Integer, Ticket> map;
+            Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
             EmbedBuilder emb = new EmbedBuilder();
             try {
-                map = mapper.readValue(new File("tickets.json"),
-                        new TypeReference<HashMap<Integer, Ticket>>() {
-                        });
+                map = mapper.readValue(new File("tickets.json"), new TypeReference<HashMap<Integer, Ticket>>() {
+                });
                 if (event.getOption("ticket-id") != null) {
                     Integer lticketId = event.getOption("ticket-id").getAsInt();
                     for (Ticket value : map.values()) {
@@ -127,7 +127,7 @@ public class support extends ListenerAdapter {
             User user = event.getUser();
             Integer lticketId = 0;
             ObjectMapper mapper = new ObjectMapper();
-            HashMap<Integer, Ticket> map = new HashMap<Integer, Ticket>();
+            Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
             if (ticketId == null) {
                 lticketId = 1;
                 ticketId = 1;
@@ -138,9 +138,8 @@ public class support extends ListenerAdapter {
             Ticket ticket = new Ticket(false, lticketId, user, topic, message);
 
             try {
-                map = mapper.readValue(new File("tickets.json"),
-                        new TypeReference<HashMap<Integer, Ticket>>() {
-                        });
+                map = mapper.readValue(new File("tickets.json"), new TypeReference<HashMap<Integer, Ticket>>() {
+                });
                 System.out.println(map);
                 map.put(lticketId, ticket);
                 System.out.println(map);
