@@ -35,7 +35,6 @@ public class support extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         String command = event.getName();
-
         if (command.equals("ticket")) {
             TextInput topic = TextInput.create("topic", "Topic", TextInputStyle.SHORT)
                     .setPlaceholder("Subject of this ticket")
@@ -54,19 +53,6 @@ public class support extends ListenerAdapter {
             Modal modal = Modal.create("ticket", "Support Ticket")
                     .addActionRows(ActionRow.of(topic), ActionRow.of(message))
                     .build();
-        }
-
-        if (command.equals("open-ticket")) {
-            loadTickets();
-            System.out.println(event.getMember().getRoles().toString());
-            if (event.getMember().getRoles().toString().contains("Admin")) {
-                List<String> openTickets = tickets.get(false);
-
-                event.reply("Open Ticktes \n" + openTickets);
-            } else {
-                event.reply("It seems that you do not have the necessary authorisation for this action.")
-                        .setEphemeral(true).queue();
-            }
         }
     }
 
