@@ -18,10 +18,41 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 public class commands extends ListenerAdapter {
 
+    private String getActivities(List activitiesList) {
+        String activitie = "";
+        if (!activitiesList.isEmpty()) {
+            Activity tempActiv = (Activity) activitiesList.get(0);
+            for (int i = 1; i < activitiesList.size(); i++) {
+                tempActiv = (Activity) activitiesList.get(i);
+                activitie = activitie + ", " + tempActiv;
+            }
+        } else {
+            activitie = "No activitie";
+        }
+        return activitie;
+    }
+
+    private String getRolesAsString(List rolesList) {
+        String roles = "";
+        if (!rolesList.isEmpty()) {
+            Role tempRole = (Role) rolesList.get(0);
+            roles = tempRole.getAsMention();
+            for (int i = 1; i < rolesList.size(); i++) {
+                tempRole = (Role) rolesList.get(i);
+                roles = roles + ", " + tempRole.getAsMention();
+            }
+        } else {
+            roles = "No roles";
+        }
+        return roles;
+    }
+
     @Override
-    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+    public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         String command = event.getName();
 
         if (command.equals("help")) {
@@ -227,37 +258,8 @@ public class commands extends ListenerAdapter {
         }
     }
 
-    private String getActivities(List activitiesList) {
-        String activitie = "";
-        if (!activitiesList.isEmpty()) {
-            Activity tempActiv = (Activity) activitiesList.get(0);
-            for (int i = 1; i < activitiesList.size(); i++) {
-                tempActiv = (Activity) activitiesList.get(i);
-                activitie = activitie + ", " + tempActiv;
-            }
-        } else {
-            activitie = "No activitie";
-        }
-        return activitie;
-    }
-
-    private String getRolesAsString(List rolesList) {
-        String roles = "";
-        if (!rolesList.isEmpty()) {
-            Role tempRole = (Role) rolesList.get(0);
-            roles = tempRole.getAsMention();
-            for (int i = 1; i < rolesList.size(); i++) {
-                tempRole = (Role) rolesList.get(i);
-                roles = roles + ", " + tempRole.getAsMention();
-            }
-        } else {
-            roles = "No roles";
-        }
-        return roles;
-    }
-
     @Override
-    public void onGuildReady(@NotNull GuildReadyEvent event) {
+    public void onGuildReady(@Nonnull GuildReadyEvent event) {
         List<CommandData> commandData = new ArrayList<>();
         commandData.add(Commands.slash("help", "Get help"));
         commandData.add(Commands.slash("website", "Get the link to our Website"));
@@ -287,7 +289,7 @@ public class commands extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildJoin(@NotNull GuildJoinEvent event) {
+    public void onGuildJoin(@Nonnull GuildJoinEvent event) {
         List<CommandData> commandData = new ArrayList<>();
         commandData.add(Commands.slash("help", "Get help"));
         commandData.add(Commands.slash("website", "Get the link to our Website"));
