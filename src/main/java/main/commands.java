@@ -160,6 +160,69 @@ public class commands extends ListenerAdapter {
                     return;
             }
         }
+
+        if (command.equals("colour")) {
+            Member member = event.getMember();
+            String pronouns = event.getOption("colour").getAsString();
+
+            switch (pronouns.toLowerCase()) {
+                case "ff55ff":
+                    Role ff55ff = event.getGuild().getRoleById("1122511805982457866");
+                    event.getGuild().addRoleToMember(member, ff55ff).queue();
+                    event.reply("The colour " + ff55ff.getAsMention() + " was assigned to you.")
+                            .setEphemeral(true).queue();
+                    return;
+
+                case "purple":
+                    Role purple = event.getGuild().getRoleById("1122511747107000370");
+                    event.getGuild().addRoleToMember(member, purple).queue();
+                    event.reply("The pronouns " + purple.getAsMention() + " have been added to your profile.")
+                            .setEphemeral(true).queue();
+                    return;
+
+                case "blue":
+                    Role blue = event.getGuild().getRoleById("1122511895669256233");
+                    event.getGuild().addRoleToMember(member, blue).queue();
+                    event.reply("The colour " + blue.getAsMention() + " was assigned to you.")
+                            .setEphemeral(true).queue();
+                    return;
+
+                case "yellow":
+                    Role yellow = event.getGuild().getRoleById("1122511956784447596");
+                    event.getGuild().addRoleToMember(member, yellow).queue();
+                    event.reply("The colour " + yellow.getAsMention() + " was assigned to you.")
+                            .setEphemeral(true).queue();
+                    return;
+
+                case "orange":
+                    Role orange = event.getGuild().getRoleById("1122512010828070962");
+                    event.getGuild().addRoleToMember(member, orange).queue();
+                    event.reply("The colour " + orange.getAsMention() + " was assigned to you.")
+                            .setEphemeral(true).queue();
+                    return;
+
+                case "green":
+                    Role green = event.getGuild().getRoleById("1122512139781935179");
+                    event.getGuild().addRoleToMember(member, green).queue();
+                    event.reply("The colour " + green.getAsMention() + " was assigned to you.")
+                            .setEphemeral(true).queue();
+                    return;
+
+                case "gray":
+                    Role gray = event.getGuild().getRoleById("1122512045435273387");
+                    event.getGuild().addRoleToMember(member, gray).queue();
+                    event.reply("The colour " + gray.getAsMention() + " was assigned to you.")
+                            .setEphemeral(true).queue();
+                    return;
+
+                case "black":
+                    Role black = event.getGuild().getRoleById("1122513483305582712");
+                    event.getGuild().addRoleToMember(member, black).queue();
+                    event.reply("The colour " + black.getAsMention() + " was assigned to you.")
+                            .setEphemeral(true).queue();
+                    return;
+            }
+        }
     }
 
     private String getActivities(List activitiesList) {
@@ -213,6 +276,11 @@ public class commands extends ListenerAdapter {
         OptionData pronouns = new OptionData(OptionType.STRING, "pronouns", "The pronouns you want to have", true)
                 .addChoice("he/him", "he").addChoice("she/her", "she").addChoice("they/them", "they");
         commandData.add(Commands.slash("pronouns", "Select your pronouns").addOptions(pronouns));
+        OptionData colour = new OptionData(OptionType.STRING, "colour", "The colour you want to be displayed as", true)
+                .addChoice("#ff55ffForTheWin", "ff55ff").addChoice("purple", "purple").addChoice("blue", "blue")
+                .addChoice("yellow", "yellow").addChoice("orange", "orange").addChoice("green", "green")
+                .addChoice("gray", "gray").addChoice("black", "black");
+        commandData.add(Commands.slash("colour", "The colour you want to be displayed as").addOptions(colour));
         event.getGuild().updateCommands().addCommands(commandData).queue();
     }
 
@@ -238,6 +306,11 @@ public class commands extends ListenerAdapter {
         OptionData pronouns = new OptionData(OptionType.STRING, "pronouns", "The pronouns you want to have", true)
                 .addChoice("he/him", "he").addChoice("she/her", "she").addChoice("they/them", "they");
         commandData.add(Commands.slash("pronouns", "Select your pronouns").addOptions(pronouns));
+        OptionData colour = new OptionData(OptionType.STRING, "colour", "The colour you want to be displayed as", true)
+                .addChoice("#ff55ffForTheWin", "ff55ff").addChoice("purple", "purple").addChoice("blue", "blue")
+                .addChoice("yellow", "yellow").addChoice("orange", "orange").addChoice("green", "green")
+                .addChoice("gray", "gray").addChoice("black", "black");
+        commandData.add(Commands.slash("colour", "The colour you want to be displayed as").addOptions(colour));
         event.getGuild().updateCommands().addCommands(commandData).queue();
     }
 
