@@ -1,8 +1,10 @@
 package main;
 
+import java.io.Serializable;
+
 import net.dv8tion.jda.api.entities.*;
 
-public class ticket {
+public class ticket implements Serializable {
     private boolean solved = false;
     private int ticketId;
     private User user;

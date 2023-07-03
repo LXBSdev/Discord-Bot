@@ -1,7 +1,9 @@
 package main;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import javax.annotation.Nonnull;
@@ -16,7 +18,6 @@ import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 
 public class support extends ListenerAdapter {
-    Integer ticketID;
 
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
@@ -74,15 +75,34 @@ public class support extends ListenerAdapter {
             String topic = event.getValue("topic").getAsString();
             String message = event.getValue("message").getAsString();
             User user = event.getUser();
-            Integer lticketId;
-            if (ticketID == null) {
-                ticketID = 1;
-                lticketId = ticketID;
-                ticketID++;
-            } else {
-                lticketId = ticketID;
-                ticketID++;
+            Integer lticketId = 1;
+
+            try {
+                ObjectInputStream in = new ObjectInputStream(new FileInputStream("tickets.txt"));
+                Integer ticketId = (Integer) in.readObject() + 1;
+                in.close();
+                ticketId ticketIdObject = new ticketId(ticketId);
+                try {
+                    ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("tickets.txt"));
+                    out.writeObject(ticketIdObject);
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                ticketId ticketId = new ticketId(1);
+                lticketId = ticketId.getTicketId();
+                try {
+                    ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("tickets.txt"));
+                    out.writeObject(ticketId);
+                    out.close();
+                } catch (IOException ee) {
+                    e.printStackTrace();
+                }
             }
+
             ticket ticket = new ticket(false, lticketId, user, topic, message);
 
             try {
@@ -94,8 +114,8 @@ public class support extends ListenerAdapter {
             }
 
             event.reply(
-                    "Your Support Form has been submited. You'll be informed when your Form has been processed. Your Ticket has the ID "
-                            + lticketId)
+                    "Your Support Form has been submited. You'll be informed when your Form has been processed.\nYour Ticket has the ID **"
+                            + lticketId + "**.\nKeep this ID, a member of support might get back to you.")
                     .setEphemeral(true).queue();
         }
     }
