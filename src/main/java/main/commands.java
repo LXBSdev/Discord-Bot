@@ -68,6 +68,11 @@ public class commands extends ListenerAdapter {
             emb.addField("More Infos: ", "[lxbs.online](https://lxbs.online)", false);
 
             event.replyEmbeds(emb.build()).setEphemeral(true).queue();
+            event.replyEmbeds(emb.build())
+                    .addActionRow(Button.link("http://lxbs.online", "lxbs.online"))
+                    .addActionRow(Button.primary("ticket", "Support"))
+                    .setEphemeral(true)
+                    .queue();
         }
 
         if (command.equals("website")) {

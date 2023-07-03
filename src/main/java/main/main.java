@@ -23,8 +23,8 @@ public class main {
         builder.setStatus(OnlineStatus.ONLINE);
         builder.setActivity(Activity.playing(status));
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES);
+        builder.addEventListeners(new memes(), new support(), new welcome(), new commands(), new contextMenu());
         shardManager = builder.build();
-        shardManager.addEventListener(new memes(), new support(), new welcome(), new commands(), new contextMenu());
     }
 
     public ShardManager getShardManager() {
