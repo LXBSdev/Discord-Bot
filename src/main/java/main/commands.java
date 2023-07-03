@@ -9,6 +9,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.time.format.DateTimeFormatter;
@@ -129,6 +131,28 @@ public class commands extends ListenerAdapter {
 
             event.replyEmbeds(emb.build()).setEphemeral(true).queue();
         }
+
+        if (command.equals("pronouns")) {
+            Member member = event.getMember();
+            String pronouns = event.getOption("pronounse").getAsString();
+
+            event.reply("Your pronouns have been added").setEphemeral(true).queue();
+
+            switch (pronouns.toLowerCase()) {
+                case "he/him":
+                    Role he = event.getGuild().getRoleById("1079840705939247155");
+                    event.getGuild().addRoleToMember(member, he);
+
+                case "she/her":
+                    Role she = event.getGuild().getRoleById("1079840746946961409");
+                    event.getGuild().addRoleToMember(member, he);
+
+                case "they/them":
+                    Role they = event.getGuild().getRoleById("1079840778077097994");
+                    event.getGuild().addRoleToMember(member, he);
+
+            }
+        }
     }
 
     private String getActivities(List activitiesList) {
@@ -179,6 +203,9 @@ public class commands extends ListenerAdapter {
                 "What topic seems your problem to be of", true)
                 .addOption(OptionType.STRING, "message", "Descreibe your problem", true));
         commandData.add(Commands.slash("open-ticket", "Show all open tickets"));
+        OptionData pronouns = new OptionData(OptionType.ROLE, "pronouns", "The pronouns you want to have", true, true)
+                .addChoice("he/him", "he/him").addChoice("she/her", "she/her").addChoice("they/them", "they/them");
+        commandData.add(Commands.slash("pronouns", "Select your pronouns").addOptions(pronouns));
         event.getGuild().updateCommands().addCommands(commandData).queue();
     }
 
@@ -197,10 +224,13 @@ public class commands extends ListenerAdapter {
         commandData.add(Commands.slash("respect", "Pay respect").addOption(OptionType.USER, "user",
                 "who you want to pay respect to", true));
         commandData.add(Commands.slash("ip", "Get Minecraft Server IP"));
-        commandData.add(Commands.slash("support", "Submit a support formula").addOption(OptionType.STRING, "topid",
+        commandData.add(Commands.slash("support", "Submit a support formula").addOption(OptionType.STRING, "topic",
                 "The topic of your problem", true)
                 .addOption(OptionType.STRING, "message", "Descreibe your problem", true));
         commandData.add(Commands.slash("open-ticket", "Show all open tickets"));
+        OptionData pronouns = new OptionData(OptionType.ROLE, "pronouns", "The pronouns you want to have", true, true)
+                .addChoice("he/him", "he/him").addChoice("she/her", "she/her").addChoice("they/them", "they/them");
+        commandData.add(Commands.slash("pronouns", "Select your pronouns").addOptions(pronouns));
         event.getGuild().updateCommands().addCommands(commandData).queue();
     }
 
