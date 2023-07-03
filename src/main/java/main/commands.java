@@ -40,6 +40,8 @@ public class commands extends ListenerAdapter {
             emb.addField("/respect", "Pay respect", true);
             emb.addField("/rickroll", "Rick-roll someone", true);
             emb.addField("/ip", "Get Minecraft Server IP", true);
+            emb.addField("/pronouns", "Select your pronouns", true);
+            emb.addField("/colour", "The colour you want to be displayed as", true);
             emb.addField("", "", false);
             emb.addField("More Infos: ", "[lxbs.online](https://lxbs.online)", false);
 
