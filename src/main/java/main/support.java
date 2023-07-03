@@ -20,8 +20,7 @@ public class support extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
-        String command = event.getName();
-        if (command.equals("ticket")) {
+        if (event.getName().equals("support")) {
             TextInput topic = TextInput.create("topic", "Topic", TextInputStyle.SHORT)
                     .setPlaceholder("Subject of this ticket")
                     .setMinLength(1)
@@ -46,7 +45,7 @@ public class support extends ListenerAdapter {
 
     @Override
     public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
-        if (event.getId().equals("ticket")) {
+        if (event.getComponentId().equals("ticket")) {
             TextInput topic = TextInput.create("topic", "Topic", TextInputStyle.SHORT)
                     .setPlaceholder("Subject of this ticket")
                     .setMinLength(1)
@@ -75,12 +74,20 @@ public class support extends ListenerAdapter {
             String topic = event.getValue("topic").getAsString();
             String message = event.getValue("message").getAsString();
             User user = event.getUser();
-            int lticketId = ticketID + 1;
-            ticketID++;
+            Integer lticketId;
+            if (ticketID == null) {
+                ticketID = 1;
+                lticketId = ticketID;
+                ticketID++;
+            } else {
+                lticketId = ticketID;
+                ticketID++;
+            }
+            ticket ticket = new ticket(false, lticketId, user, topic, message);
 
             try {
                 ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("tickets.txt"));
-                out.writeObject(new ticket(false, lticketId, user, topic, message));
+                out.writeObject(ticket);
                 out.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -88,7 +95,7 @@ public class support extends ListenerAdapter {
 
             event.reply(
                     "Your Support Form has been submited. You'll be informed when your Form has been processed. Your Ticket has the ID "
-                            + ticketID)
+                            + lticketId)
                     .setEphemeral(true).queue();
         }
     }
