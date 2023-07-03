@@ -27,6 +27,8 @@ import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 
 public class support extends ListenerAdapter {
 
+    Integer ticketId;
+
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         if (event.getName().equals("support")) {
@@ -123,8 +125,16 @@ public class support extends ListenerAdapter {
             String topic = event.getValue("topic").getAsString();
             String message = event.getValue("message").getAsString();
             User user = event.getUser();
-            Integer lticketId = 1;
+            Integer lticketId = 0;
             ObjectMapper mapper = new ObjectMapper();
+            if (ticketId == null) {
+                lticketId = 1;
+                ticketId = 1;
+            } else {
+                ticketId++;
+                lticketId = ticketId;
+            }
+
             Ticket ticket = new Ticket(false, lticketId, user, topic, message);
             HashMap<Integer, Ticket> map = new HashMap<Integer, Ticket>();
             map.put(lticketId, ticket);
