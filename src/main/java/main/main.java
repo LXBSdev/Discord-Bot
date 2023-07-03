@@ -15,11 +15,10 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 public class main {
 
-    private final Dotenv config;
+    private final Dotenv config = Dotenv.configure().load();
+    String token = config.get("TOKEN");
 
     public static void main(String[] args) throws Exception {
-        config = Dotenv.configure().load();
-        String token = config.get("TOKEN");
 
         String prefix = "/";
 
