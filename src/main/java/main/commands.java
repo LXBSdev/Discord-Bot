@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -74,7 +75,8 @@ public class commands extends ListenerAdapter {
 
             emb.addField("Website", "You can find more Information on our [Website](https://lxbs.online)", false);
 
-            event.replyEmbeds(emb.build()).setEphemeral(true).queue();
+            event.replyEmbeds(emb.build()).addActionRow(Button.link("http://lxbs.online", "lxbs.online"))
+                    .setEphemeral(true).queue();
         }
 
         if (command.equals("rules")) {
