@@ -18,6 +18,8 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+import main.ticket;
+
 public class support extends ListenerAdapter {
     private static Map<Boolean, List<String>> tickets;
 
@@ -50,28 +52,13 @@ public class support extends ListenerAdapter {
             User user = event.getUser();
             ticketID++;
 
+            new ticket(false, ticketID, user, topic, message);
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(""))
+
             event.reply(
                     "Your Support Form has been submited. You'll be informed when your Form has been processed. Your Ticket has the ID "
                             + ticketID)
                     .setEphemeral(true).queue();
-
-            EmbedBuilder emb = new EmbedBuilder();
-
-            emb.setTitle("Support Form");
-            emb.setDescription("User: " + user.getAsMention());
-            emb.addField("Topic: ", topic, false);
-            emb.addField("Message: ", message, false);
-            emb.addField("TicketID: ", ticketID.toString(), false);
-            event.getGuild().getTextChannelById("1122870579809243196").sendMessageEmbeds(emb.build()).queue();
-
-            List<String> ticket = new ArrayList<>();
-            ticket.add("user: " + user.toString());
-            ticket.add("topic: " + topic);
-            ticket.add("message: " + message);
-            ticket.add("ticket ID: " + ticketID.toString());
-
-            tickets.put(false, ticket);
-            saveTickets();
         }
 
         if (command.equals("open-ticket")) {
