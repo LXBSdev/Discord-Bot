@@ -175,6 +175,10 @@ public class commands extends ListenerAdapter {
         commandData.add(Commands.slash("respect", "Pay respect").addOption(OptionType.USER, "user",
                 "who you want to pay respect to", true));
         commandData.add(Commands.slash("ip", "Get Minecraft Server IP"));
+        commandData.add(Commands.slash("support", "Submit a support formula").addOption(OptionType.STRING, "topic",
+                "What topic seems your problem to be of", true)
+                .addOption(OptionType.STRING, "message", "Descreibe your problem", true));
+        commandData.add(Commands.slash("open-ticket", "Show all open tickets"));
         event.getGuild().updateCommands().addCommands(commandData).queue();
     }
 
@@ -193,6 +197,10 @@ public class commands extends ListenerAdapter {
         commandData.add(Commands.slash("respect", "Pay respect").addOption(OptionType.USER, "user",
                 "who you want to pay respect to", true));
         commandData.add(Commands.slash("ip", "Get Minecraft Server IP"));
+        commandData.add(Commands.slash("support", "Submit a support formula").addOption(OptionType.STRING, "topid",
+                "The topic of your problem", true)
+                .addOption(OptionType.STRING, "message", "Descreibe your problem", true));
+        commandData.add(Commands.slash("open-ticket", "Show all open tickets"));
         event.getGuild().updateCommands().addCommands(commandData).queue();
     }
 
