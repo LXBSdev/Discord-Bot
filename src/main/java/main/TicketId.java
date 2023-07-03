@@ -1,9 +1,11 @@
 package main;
 
-public class ticketId {
+import java.io.Serializable;
+
+public class TicketId implements Serializable {
     private int ticketId;
 
-    public ticketId(int lticketId) {
+    public TicketId(int lticketId) {
         ticketId = lticketId;
     }
 

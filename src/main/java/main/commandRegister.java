@@ -32,7 +32,9 @@ public class commandRegister extends ListenerAdapter {
                                 .addOption(OptionType.USER, "user", "who you want to pay respect to", true));
                 commandData.add(Commands.slash("ip", "Get Minecraft Server IP"));
                 commandData.add(Commands.slash("support", "Submit a support formula"));
-                commandData.add(Commands.slash("open-ticket", "Show all open tickets"));
+                commandData.add(Commands.slash("ticket", "Show all open tickets")
+                                .addOption(OptionType.INTEGER, "ticket-id",
+                                                "The specific ID of a ticket you want to view", false));
                 OptionData pronouns = new OptionData(OptionType.STRING, "pronouns", "The pronouns you want to have",
                                 true)
                                 .addChoice("he/him", "he").addChoice("she/her", "she")
@@ -67,7 +69,9 @@ public class commandRegister extends ListenerAdapter {
                                 .addOption(OptionType.USER, "user", "who you want to pay respect to", true));
                 commandData.add(Commands.slash("ip", "Get Minecraft Server IP"));
                 commandData.add(Commands.slash("support", "Submit a support formula"));
-                commandData.add(Commands.slash("open-ticket", "Show all open tickets"));
+                commandData.add(Commands.slash("ticket", "Show all open tickets")
+                                .addOption(OptionType.INTEGER, "ticket-id",
+                                                "The specific ID of a ticket you want to view", false));
                 OptionData pronouns = new OptionData(OptionType.STRING, "pronouns", "The pronouns you want to have",
                                 true)
                                 .addChoice("he/him", "he").addChoice("she/her", "she")

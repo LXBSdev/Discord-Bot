@@ -1,12 +1,20 @@
 package main;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.annotation.Nonnull;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -42,6 +50,46 @@ public class support extends ListenerAdapter {
 
             event.replyModal(modal).queue();
         }
+
+        if (event.getName().equals("ticket")) {
+            ObjectMapper mapper = new ObjectMapper();
+            ArrayList<Ticket> tickets = new ArrayList<>();
+            HashMap<Integer, Ticket> map;
+            EmbedBuilder emb = new EmbedBuilder();
+            try {
+                map = mapper.readValue(new File("tickets.json"),
+                        new TypeReference<HashMap<Integer, Ticket>>() {
+                        });
+                if (event.getOption("ticket-id") != null) {
+                    Integer lticketId = event.getOption("ticket-id").getAsInt();
+                    for (Ticket value : map.values()) {
+                        if (value.getTicketId() == lticketId) {
+                            emb.addField("Ticket ID", lticketId.toString(), false);
+                            emb.addField("User", value.getUser(), false);
+                            emb.addField("Topic", value.getTopic(), false);
+                            emb.addField("Message", value.getMessage(), false);
+                        }
+                    }
+                } else {
+                    for (Ticket value : map.values()) {
+                        if (value.getSolved() == false) {
+                            tickets.add(value);
+                        }
+                    }
+                    for (Ticket ticket : tickets) {
+                        emb.addField(ticket.getTicketId().toString(), ticket.getTopic(), false);
+                    }
+                    emb.setTitle("Open tickets")
+                            .setColor(0xff55ff);
+                    event.replyEmbeds(emb.build()).setEphemeral(false).queue();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassCastException e) {
+                event.reply("There are no tickets avlaible");
+            }
+
+        }
     }
 
     @Override
@@ -76,39 +124,13 @@ public class support extends ListenerAdapter {
             String message = event.getValue("message").getAsString();
             User user = event.getUser();
             Integer lticketId = 1;
+            ObjectMapper mapper = new ObjectMapper();
+            Ticket ticket = new Ticket(false, lticketId, user, topic, message);
+            HashMap<Integer, Ticket> map = new HashMap<Integer, Ticket>();
+            map.put(lticketId, ticket);
 
             try {
-                ObjectInputStream in = new ObjectInputStream(new FileInputStream("tickets.txt"));
-                Integer ticketId = (Integer) in.readObject() + 1;
-                in.close();
-                ticketId ticketIdObject = new ticketId(ticketId);
-                try {
-                    ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("tickets.txt"));
-                    out.writeObject(ticketIdObject);
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                ticketId ticketId = new ticketId(1);
-                lticketId = ticketId.getTicketId();
-                try {
-                    ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("tickets.txt"));
-                    out.writeObject(ticketId);
-                    out.close();
-                } catch (IOException ee) {
-                    e.printStackTrace();
-                }
-            }
-
-            ticket ticket = new ticket(false, lticketId, user, topic, message);
-
-            try {
-                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("tickets.txt"));
-                out.writeObject(ticket);
-                out.close();
+                mapper.writeValue(new File("tickets.json"), map);
             } catch (IOException e) {
                 e.printStackTrace();
             }
