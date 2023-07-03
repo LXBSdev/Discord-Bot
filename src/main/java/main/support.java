@@ -81,6 +81,7 @@ public class support extends ListenerAdapter {
 
         if (command.equals("open-ticket")) {
             loadTickets();
+            System.out.println(event.getMember().getRoles().toString());
             if (event.getMember().getRoles().toString().contains("Admin")) {
                 List<String> openTickets = tickets.get(false);
 
