@@ -127,6 +127,7 @@ public class support extends ListenerAdapter {
             User user = event.getUser();
             Integer lticketId = 0;
             ObjectMapper mapper = new ObjectMapper();
+            HashMap<Integer, Ticket> map = new HashMap<Integer, Ticket>();
             if (ticketId == null) {
                 lticketId = 1;
                 ticketId = 1;
@@ -134,13 +135,22 @@ public class support extends ListenerAdapter {
                 ticketId++;
                 lticketId = ticketId;
             }
-
             Ticket ticket = new Ticket(false, lticketId, user, topic, message);
-            HashMap<Integer, Ticket> map = new HashMap<Integer, Ticket>();
-            map.put(lticketId, ticket);
+
+            try {
+                map = mapper.readValue(new File("tickets.json"),
+                        new TypeReference<HashMap<Integer, Ticket>>() {
+                        });
+                System.out.println(map);
+                map.put(lticketId, ticket);
+                System.out.println(map);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             try {
                 mapper.writeValue(new File("tickets.json"), map);
+                System.out.println(map);
             } catch (IOException e) {
                 e.printStackTrace();
             }
