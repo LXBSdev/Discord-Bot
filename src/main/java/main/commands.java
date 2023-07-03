@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
@@ -134,23 +135,29 @@ public class commands extends ListenerAdapter {
 
         if (command.equals("pronouns")) {
             Member member = event.getMember();
-            String pronouns = event.getOption("pronounse").getAsString();
-
-            event.reply("Your pronouns have been added").setEphemeral(true).queue();
+            String pronouns = event.getOption("pronouns").getAsString();
 
             switch (pronouns.toLowerCase()) {
-                case "he/him":
+                case "he":
                     Role he = event.getGuild().getRoleById("1079840705939247155");
-                    event.getGuild().addRoleToMember(member, he);
+                    event.getGuild().addRoleToMember(member, he).queue();
+                    event.reply("The pronouns " + he.getAsMention() + " have been added to your profile.")
+                            .setEphemeral(true).queue();
+                    return;
 
-                case "she/her":
+                case "she":
                     Role she = event.getGuild().getRoleById("1079840746946961409");
-                    event.getGuild().addRoleToMember(member, he);
+                    event.getGuild().addRoleToMember(member, she).queue();
+                    event.reply("The pronouns " + she.getAsMention() + " have been added to your profile.")
+                            .setEphemeral(true).queue();
+                    return;
 
-                case "they/them":
+                case "they":
                     Role they = event.getGuild().getRoleById("1079840778077097994");
-                    event.getGuild().addRoleToMember(member, he);
-
+                    event.getGuild().addRoleToMember(member, they).queue();
+                    event.reply("The pronouns " + they.getAsMention() + " have been added to your profile.")
+                            .setEphemeral(true).queue();
+                    return;
             }
         }
     }
@@ -203,8 +210,8 @@ public class commands extends ListenerAdapter {
                 "What topic seems your problem to be of", true)
                 .addOption(OptionType.STRING, "message", "Descreibe your problem", true));
         commandData.add(Commands.slash("open-ticket", "Show all open tickets"));
-        OptionData pronouns = new OptionData(OptionType.ROLE, "pronouns", "The pronouns you want to have", true, true)
-                .addChoice("he/him", "he/him").addChoice("she/her", "she/her").addChoice("they/them", "they/them");
+        OptionData pronouns = new OptionData(OptionType.STRING, "pronouns", "The pronouns you want to have", true)
+                .addChoice("he/him", "he").addChoice("she/her", "she").addChoice("they/them", "they");
         commandData.add(Commands.slash("pronouns", "Select your pronouns").addOptions(pronouns));
         event.getGuild().updateCommands().addCommands(commandData).queue();
     }
@@ -228,8 +235,8 @@ public class commands extends ListenerAdapter {
                 "The topic of your problem", true)
                 .addOption(OptionType.STRING, "message", "Descreibe your problem", true));
         commandData.add(Commands.slash("open-ticket", "Show all open tickets"));
-        OptionData pronouns = new OptionData(OptionType.ROLE, "pronouns", "The pronouns you want to have", true, true)
-                .addChoice("he/him", "he/him").addChoice("she/her", "she/her").addChoice("they/them", "they/them");
+        OptionData pronouns = new OptionData(OptionType.STRING, "pronouns", "The pronouns you want to have", true)
+                .addChoice("he/him", "he").addChoice("she/her", "she").addChoice("they/them", "they");
         commandData.add(Commands.slash("pronouns", "Select your pronouns").addOptions(pronouns));
         event.getGuild().updateCommands().addCommands(commandData).queue();
     }
