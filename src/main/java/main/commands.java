@@ -108,12 +108,12 @@ public class commands extends ListenerAdapter {
         if (command.equals("userinfo")) {
             User user = event.getOption("user").getAsUser();
             Member member = event.getOption("user").getAsMember();
-            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
             EmbedBuilder emb = new EmbedBuilder();
 
             emb.setTitle("Member Info");
-            emb.setDescription(user.getName() + " joined on " + member.getTimeJoined().format(fmt));
+            emb.setDescription(user.getName() + " joined on " + member.getTimeJoined().format(dtf));
             emb.setColor(member.getColor());
             emb.setThumbnail(user.getAvatarUrl());
             emb.setAuthor("Information on " + user.getAsTag());
@@ -122,7 +122,7 @@ public class commands extends ListenerAdapter {
             emb.addField("Game: ", getActivities(member.getActivities()), false);
             emb.addField("Roles: ", getRolesAsString(member.getRoles()), false);
             emb.addField("Server Bost: ", member.getTimeBoosted() == null ? "Has never boosted this Server"
-                    : member.getTimeBoosted().format(fmt), false);
+                    : member.getTimeBoosted().format(dtf), false);
 
             event.replyEmbeds(emb.build()).setEphemeral(true).queue();
         }

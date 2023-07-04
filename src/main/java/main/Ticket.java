@@ -27,6 +27,10 @@ public class Ticket implements Serializable {
         solved = true;
     }
 
+    void ticketSetSolvedTime(OffsetDateTime ltimeClosed) {
+        timeClosed = ltimeClosed;
+    }
+
     public Boolean getSolved() {
         return solved;
     }

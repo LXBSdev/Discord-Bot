@@ -3,9 +3,10 @@ package main;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -32,6 +33,7 @@ public class support extends ListenerAdapter {
 
     Integer ticketId;
     JDA jda;
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
@@ -81,7 +83,8 @@ public class support extends ListenerAdapter {
                                             .setColor(0xff55ff)
                                             .setAuthor(user)
                                             .addField("Topic", value.getTopic(), false)
-                                            .addField("Message", value.getMessage(), false);
+                                            .addField("Message", value.getMessage(), false)
+                                            .setFooter("Ticket opened " + value.getTimeSubmitted().format(dtf));
                                     event.replyEmbeds(emb.build())
                                             .addActionRow(Button.primary("close", "close ticket"))
                                             .queue();
@@ -156,6 +159,7 @@ public class support extends ListenerAdapter {
                 for (Ticket value : map.values()) {
                     if (value.getTicketId().toString() == ticketId) {
                         value.ticketSetSolvedTrue();
+                        value.ticketSetSolvedTime(OffsetDateTime.now());
                         String userId = value.getUserId();
                         User user;
                         String userMention;
@@ -175,7 +179,8 @@ public class support extends ListenerAdapter {
                                         .setAuthor(userMention)
                                         .addField("Topic", value.getTopic(), false)
                                         .addField("Message", value.getMessage(), false)
-                                        .setFooter("Ticket closed")
+                                        .setFooter("Time opened " + value.getTimeSubmitted().format(dtf)
+                                                + " \u2022 Time closed " + OffsetDateTime.now().format(dtf))
                                         .build())
                                 .queue();
                         event.reply(
@@ -206,7 +211,7 @@ public class support extends ListenerAdapter {
                 ticketId++;
                 lticketId = ticketId;
             }
-            Ticket ticket = new Ticket(false, lticketId, user.getId(), topic, message);
+            Ticket ticket = new Ticket(false, lticketId, user.getId(), topic, message, OffsetDateTime.now(), null);
 
             try {
                 map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {
