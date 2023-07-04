@@ -9,6 +9,8 @@
   <version>1.0-SNAPSHOT</version>
 
   <name>LXBS Support Bot</name>
+
+  <description>The LXBS Discord support bot</description>
   <url>https://dev.lxbs.online</url>
 
   <properties>
