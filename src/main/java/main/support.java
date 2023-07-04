@@ -60,7 +60,7 @@ public class support extends ListenerAdapter {
         }
 
         if (event.getName().equals("ticket")) {
-            if (event.getMember().getRoles().contains("Admin")) {
+            if (event.getMember().getRoles().toString().contains("Admin")) {
                 if (event.getChannel().getId().equals("1122870579809243196")) {
                     ObjectMapper mapper = new ObjectMapper();
                     Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
@@ -114,7 +114,10 @@ public class support extends ListenerAdapter {
                         e.printStackTrace();
                     }
                 } else {
-                    event.reply("You can only call this method in the #tickets channel").setEphemeral(true).queue();
+                    event.reply("You can only call this method in the "
+                            + event.getGuild().getTextChannelById("1122870579809243196").getAsMention() + " channel")
+                            .setEphemeral(true)
+                            .queue();
                 }
             } else {
                 event.reply("You do not have the necessary permissions for this action").setEphemeral(true).queue();
@@ -185,7 +188,7 @@ public class support extends ListenerAdapter {
                                 .queue();
                         event.reply(
                                 "The ticket with the ID **" + ticketId
-                                        + "** has been marked as closed")
+                                        + "** has been marked as closed\n" + OffsetDateTime.now().format(dtf))
                                 .setEphemeral(true).queue();
                     }
                 }
@@ -216,9 +219,7 @@ public class support extends ListenerAdapter {
             try {
                 map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {
                 });
-                System.out.println(map);
                 map.put(lticketId, ticket);
-                System.out.println(map);
             } catch (FileNotFoundException e) {
                 map.put(lticketId, ticket);
             } catch (IOException e) {
@@ -227,14 +228,19 @@ public class support extends ListenerAdapter {
 
             try {
                 mapper.writeValue(new File("tickets.json"), map);
-                System.out.println(map);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
+            user.openPrivateChannel().flatMap(channel -> channel.sendMessage(
+                    "Your Support Form has been submited. You'll be informed when your Form has been processed.\nYour Ticket has the ID **"
+                            + "**\n" + OffsetDateTime.now().format(dtf)))
+                    .queue();
+
             event.reply(
                     "Your Support Form has been submited. You'll be informed when your Form has been processed.\nYour Ticket has the ID **"
-                            + lticketId + "**.\nKeep this ID, a member of support might get back to you.")
+                            + lticketId + "**.\nKeep this ID, a member of support might get back to you.\n"
+                            + OffsetDateTime.now().format(dtf))
                     .setEphemeral(true).queue();
         }
     }
