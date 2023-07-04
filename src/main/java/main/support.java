@@ -79,15 +79,28 @@ public class support extends ListenerAdapter {
                                     } else {
                                         user = jda.getUserById(userId).getAsMention();
                                     }
-                                    emb.setTitle("Ticket: " + ticketId)
-                                            .setColor(0xff55ff)
-                                            .setAuthor(user)
-                                            .addField("Topic", value.getTopic(), false)
-                                            .addField("Message", value.getMessage(), false)
-                                            .setFooter("Ticket opened " + value.getTimeSubmitted().format(dtf));
-                                    event.replyEmbeds(emb.build())
-                                            .addActionRow(Button.primary("close", "close ticket"))
-                                            .queue();
+                                    if (value.getSolved() == true) {
+                                        emb.setTitle("Closed! " + ticketId)
+                                                .setColor(0xff55ff)
+                                                .setAuthor(user)
+                                                .addField("Topic", value.getTopic(), false)
+                                                .addField("Message", value.getMessage(), false)
+                                                .setFooter("Time opened " + value.getTimeSubmitted().format(dtf)
+                                                        + " \u2022 Time closed "
+                                                        + OffsetDateTime.now().format(dtf));
+                                        event.replyEmbeds(emb.build())
+                                                .queue();
+                                    } else {
+                                        emb.setTitle("Ticket: " + ticketId)
+                                                .setColor(0xff55ff)
+                                                .setAuthor(user)
+                                                .addField("Topic", value.getTopic(), false)
+                                                .addField("Message", value.getMessage(), false)
+                                                .setFooter("Ticket opened " + value.getTimeSubmitted().format(dtf));
+                                        event.replyEmbeds(emb.build())
+                                                .addActionRow(Button.primary("close", "close ticket"))
+                                                .queue();
+                                    }
                                 } else {
                                     event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
                                 }
