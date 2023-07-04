@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -25,6 +26,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Message;
 
 public class support extends ListenerAdapter {
 
@@ -56,72 +58,64 @@ public class support extends ListenerAdapter {
         }
 
         if (event.getName().equals("ticket")) {
-            ObjectMapper mapper = new ObjectMapper();
-            ArrayList<Ticket> tickets = new ArrayList<>();
-            Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
-            EmbedBuilder emb = new EmbedBuilder();
-            try {
-                map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {
-                });
-                if (event.getOption("ticket-id") != null) {
-                    Integer ticketId = event.getOption("ticket-id").getAsInt();
-                    if (event.getOption("closeticket") != null) {
-                        Boolean closeticket = event.getOption("closeticket").getAsBoolean();
-                        if (closeticket == true) {
+            if (event.getMember().getRoles().contains("Admin")) {
+                if (event.getChannel().getId().equals("1122870579809243196")) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
+                    EmbedBuilder emb = new EmbedBuilder();
+                    try {
+                        map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {
+                        });
+                        if (event.getOption("ticket-id") != null) {
+                            Integer ticketId = event.getOption("ticket-id").getAsInt();
                             for (Ticket value : map.values()) {
                                 if (value.getTicketId() == ticketId) {
-                                    value.ticketSetSolvedTrue();
                                     String userId = value.getUserId();
-                                    User user = jda.getUserById(userId);
-                                    user.openPrivateChannel().flatMap(channel -> channel.sendMessage(user
-                                            + " your support form with the ID **" + ticketId
-                                            + "** has been marked as closed. The problem should be solved now. If this is not the case, please contact a support member or open a new ticket under the same ticket ID."))
+                                    String user;
+                                    if (jda.getUserById(userId) == null) {
+                                        user = "User unavailable";
+                                    } else {
+                                        user = jda.getUserById(userId).getAsMention();
+                                    }
+                                    emb.setTitle("Ticket: " + ticketId)
+                                            .setColor(0xff55ff)
+                                            .setAuthor(user)
+                                            .addField("Topic", value.getTopic(), false)
+                                            .addField("Message", value.getMessage(), false);
+                                    event.replyEmbeds(emb.build())
+                                            .addActionRow(Button.primary("close", "close ticket"))
                                             .queue();
-                                    event.reply("The ticket with the ID **" + ticketId + "** has been marked as closed")
-                                            .setEphemeral(true).queue();
                                 }
                             }
-                        }
-                    } else {
-                        for (Ticket value : map.values()) {
-                            if (value.getTicketId() == ticketId) {
-                                String userId = value.getUserId();
-                                emb.addField("Ticket ID", ticketId.toString(), false);
-                                emb.addField("User", jda.getUserById(userId).getAsMention(), false);
-                                emb.addField("Topic", value.getTopic(), false);
-                                emb.addField("Message", value.getMessage(), false);
-                                event.replyEmbeds(emb.build()).addActionRow(Button.primary("close", "close ticket"))
-                                        .queue();
+                        } else {
+                            ArrayList<Ticket> tickets = new ArrayList<>();
+                            for (Ticket value : map.values()) {
+                                if (value.getSolved() == false) {
+                                    tickets.add(value);
+                                }
                             }
+                            for (Ticket ticket : tickets) {
+                                emb.addField(ticket.getTicketId().toString(), ticket.getTopic(), false);
+                            }
+                            emb.setTitle("Open tickets")
+                                    .setColor(0xff55ff);
+                            event.replyEmbeds(emb.build()).queue();
                         }
+                    } catch (FileNotFoundException e) {
+                        event.reply("There are no tickets avlaible").setEphemeral(true).queue();
+                    } catch (ClassCastException e) {
+                        event.reply("There are no tickets avlaible").setEphemeral(true).queue();
+                    } catch (InvalidDefinitionException e) {
+                        event.reply("There are no tickets avlaible").setEphemeral(true).queue();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 } else {
-                    if (event.getOption("closeticket") != null) {
-                        event.reply("You must provide a ticket ID.").setEphemeral(true).queue();
-                    } else {
-                        for (Ticket value : map.values()) {
-                            if (value.getSolved() == false) {
-                                tickets.add(value);
-                            }
-                        }
-                        for (Ticket ticket : tickets) {
-                            emb.addField(ticket.getTicketId().toString(), ticket.getTopic(), false);
-                        }
-                        emb.setTitle("Open tickets")
-                                .setColor(0xff55ff);
-                        event.replyEmbeds(emb.build()).queue();
-                    }
+                    event.reply("You can only call this method in the #tickets channel").setEphemeral(true).queue();
                 }
-            } catch (FileNotFoundException e) {
-                event.reply("There are no tickets avlaible").setEphemeral(true).queue();
-            } catch (ClassCastException e) {
-                event.reply("There are no tickets avlaible").setEphemeral(true).queue();
-            } catch (InvalidDefinitionException e) {
-                event.reply("There are no tickets avlaible").setEphemeral(true).queue();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } else {
+                event.reply("You do not have the necessary permissions for this action").setEphemeral(true).queue();
             }
-
         }
     }
 
@@ -147,6 +141,52 @@ public class support extends ListenerAdapter {
                     .build();
 
             event.replyModal(modal).queue();
+        }
+
+        if (event.getComponentId().equals("close")) {
+            Message message = event.getMessage();
+            String[] messageRaw = message.getContentRaw().split(" ");
+            String ticketId = messageRaw[2];
+            EmbedBuilder emb = new EmbedBuilder();
+            ObjectMapper mapper = new ObjectMapper();
+            Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
+            try {
+                map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {
+                });
+                for (Ticket value : map.values()) {
+                    if (value.getTicketId().toString() == ticketId) {
+                        value.ticketSetSolvedTrue();
+                        String userId = value.getUserId();
+                        User user;
+                        String userMention;
+                        if (jda.getUserById(userId) == null) {
+                            userMention = "User unavailable";
+                        } else {
+                            user = jda.getUserById(userId);
+                            userMention = user.getAsMention();
+                            user.openPrivateChannel().flatMap(channel -> channel.sendMessage(user
+                                    + " your support form with the ID **" + ticketId
+                                    + "** has been marked as closed. The problem should be solved now. If this is not the case, please contact a support member or open a new ticket under the same ticket ID."))
+                                    .queue();
+                        }
+                        message.editMessageEmbeds(
+                                emb.setTitle("Ticket: " + ticketId)
+                                        .setColor(0xff55ff)
+                                        .setAuthor(userMention)
+                                        .addField("Topic", value.getTopic(), false)
+                                        .addField("Message", value.getMessage(), false)
+                                        .setFooter("Ticket closed")
+                                        .build())
+                                .queue();
+                        event.reply(
+                                "The ticket with the ID **" + ticketId
+                                        + "** has been marked as closed")
+                                .setEphemeral(true).queue();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
