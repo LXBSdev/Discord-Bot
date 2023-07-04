@@ -174,7 +174,7 @@ public class support extends ListenerAdapter {
                                     .queue();
                         }
                         message.editMessageEmbeds(
-                                emb.setTitle("Ticket: " + ticketId)
+                                emb.setTitle("Closed! " + ticketId)
                                         .setColor(0xff55ff)
                                         .setAuthor(userMention)
                                         .addField("Topic", value.getTopic(), false)
