@@ -139,19 +139,6 @@ public class commands extends ListenerAdapter {
             event.reply("Hi! " + member.getAsMention() + " Nice to see you.").queue();
         }
 
-        if (command.equals("rickroll")) {
-            Member member = event.getOption("user").getAsMember();
-            event.reply(member.getAsMention()
-                    + "\n https://tenor.com/view/rickroll-roll-rick-never-gonna-give-you-up-never-gonna-gif-22954713")
-                    .queue();
-        }
-
-        if (command.equals("respect")) {
-            Member member = event.getOption("user").getAsMember();
-            event.reply(member.getAsMention()
-                    + "\n https://tenor.com/view/keyboard-hyperx-rgb-hyperx-family-hyperx-gaming-gif-17743649").queue();
-        }
-
         if (command.equals("ip")) {
 
             EmbedBuilder emb = new EmbedBuilder();

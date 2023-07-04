@@ -26,10 +26,6 @@ public class commandRegister extends ListenerAdapter {
                                 .addOption(OptionType.USER, "user", "The user you want info on", true));
                 commandData.add(Commands.slash("hello", "Say hello")
                                 .addOption(OptionType.USER, "user", "The user you want to say hello to", false));
-                commandData.add(Commands.slash("rickroll", "Rick-roll someone")
-                                .addOption(OptionType.USER, "user", "who you want to pay respect to", true));
-                commandData.add(Commands.slash("respect", "Pay respect")
-                                .addOption(OptionType.USER, "user", "who you want to pay respect to", true));
                 commandData.add(Commands.slash("ip", "Get Minecraft Server IP"));
                 commandData.add(Commands.slash("support", "Submit a support formula"));
                 commandData.add(Commands.slash("ticket", "Show all open tickets")
@@ -63,10 +59,6 @@ public class commandRegister extends ListenerAdapter {
                                 .addOption(OptionType.USER, "user", "The user you want info on", true));
                 commandData.add(Commands.slash("hello", "Say hello")
                                 .addOption(OptionType.USER, "user", "The user you want to say hello to", false));
-                commandData.add(Commands.slash("rickroll", "Rick-roll someone")
-                                .addOption(OptionType.USER, "user", "who you want to pay respect to", true));
-                commandData.add(Commands.slash("respect", "Pay respect")
-                                .addOption(OptionType.USER, "user", "who you want to pay respect to", true));
                 commandData.add(Commands.slash("ip", "Get Minecraft Server IP"));
                 commandData.add(Commands.slash("support", "Submit a support formula"));
                 commandData.add(Commands.slash("ticket", "Show all open tickets")
