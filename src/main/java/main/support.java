@@ -88,6 +88,8 @@ public class support extends ListenerAdapter {
                                     event.replyEmbeds(emb.build())
                                             .addActionRow(Button.primary("close", "close ticket"))
                                             .queue();
+                                } else {
+                                    event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
                                 }
                             }
                         } else {
@@ -106,10 +108,13 @@ public class support extends ListenerAdapter {
                         }
                     } catch (FileNotFoundException e) {
                         event.reply("There are no tickets avlaible").setEphemeral(true).queue();
+                        e.printStackTrace();
                     } catch (ClassCastException e) {
                         event.reply("There are no tickets avlaible").setEphemeral(true).queue();
+                        e.printStackTrace();
                     } catch (InvalidDefinitionException e) {
                         event.reply("There are no tickets avlaible").setEphemeral(true).queue();
+                        e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
