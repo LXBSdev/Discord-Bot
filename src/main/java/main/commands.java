@@ -54,16 +54,16 @@ public class commands extends ListenerAdapter {
             emb.setColor(0xff55ff);
             emb.setThumbnail(
                     "https://cdn.discordapp.com/attachments/837779743486378075/1122872440872247437/logo-magenta.png");
-            emb.addField("</help:1125341652886769664>", "Get help", true);
-            emb.addField("</support:1125342053195325480>", "Get support", true);
-            emb.addField("</rules:1125341652886769666>", "Display server rules", true);
-            emb.addField("</userinfo:1125341652886769667>", "Get info on a user", true);
-            emb.addField("</website:1125341652886769665>", "Get the link to our Website", true);
-            emb.addField("</respect:1125341652886769670>", "Pay respect", true);
-            emb.addField("</rickroll:1125341652886769669>", "Rick-roll someone", true);
-            emb.addField("</ip:1125341652886769671>", "Get Minecraft Server IP", true);
-            emb.addField("</pronouns:1125355134185132052>", "Select your pronouns", true);
-            emb.addField("</colour:1125363427611779152>", "The colour you want to be displayed as", true);
+            emb.addField("</help:1125414321204236328>", "Get help", true);
+            emb.addField("</support:1125414321204236336>", "Get support", true);
+            emb.addField("</rules:1125414321204236330>", "Display server rules", true);
+            emb.addField("</userinfo:1125414321204236331>", "Get info on a user", true);
+            emb.addField("</website:1125414321204236329>", "Get the link to our Website", true);
+            emb.addField("</respect:1125414321204236334>", "Pay respect", true);
+            emb.addField("</rickroll:1125414321204236333>", "Rick-roll someone", true);
+            emb.addField("</ip:1125414321204236335>", "Get Minecraft Server IP", true);
+            emb.addField("</pronouns:1125414321359421471>", "Select your pronouns", true);
+            emb.addField("</colour:1125414321359421472>", "The colour you want to be displayed as", true);
             emb.addField("", "", false);
             emb.addField("More Infos: ", "[lxbs.online](https://lxbs.online)", false);
 
