@@ -24,8 +24,15 @@ public class welcome extends ListenerAdapter {
         emb.addField("Have Fun", "More infos at [lxbs.online](http://lxbs.online)", false);
 
         event.getGuild().getTextChannelById("965307484296347658").sendMessageEmbeds(emb.build()).queue();
-        event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("1071550714372956241"))
-                .queue();
+        if (event.getUser().isBot()) {
+            event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("983417133742567475"))
+                    .queue();
+            event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("1122511805982457866"))
+                    .queue();
+        } else {
+            event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("1071550714372956241"))
+                    .queue();
+        }
 
     }
 
