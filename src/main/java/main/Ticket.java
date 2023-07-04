@@ -1,6 +1,7 @@
 package main;
 
 import java.io.Serializable;
+import java.time.OffsetDateTime;
 
 public class Ticket implements Serializable {
     private Boolean solved;
@@ -8,13 +9,18 @@ public class Ticket implements Serializable {
     private String userId;
     private String topic;
     private String message;
+    private OffsetDateTime timeSubmitted;
+    private OffsetDateTime timeClosed;
 
-    public Ticket(Boolean lsolved, Integer lticketId, String luserId, String ltopic, String lmessage) {
+    public Ticket(Boolean lsolved, Integer lticketId, String luserId, String ltopic, String lmessage,
+            OffsetDateTime ltimeSubmitted, OffsetDateTime ltimeClosed) {
         solved = lsolved;
         ticketId = lticketId;
         userId = luserId;
         topic = ltopic;
         message = lmessage;
+        timeSubmitted = ltimeSubmitted;
+        timeClosed = ltimeClosed;
     }
 
     void ticketSetSolvedTrue() {
@@ -39,5 +45,13 @@ public class Ticket implements Serializable {
 
     public String getMessage() {
         return message;
+    }
+
+    public OffsetDateTime getTimeSubmitted() {
+        return timeSubmitted;
+    }
+
+    public OffsetDateTime getTimeClosed() {
+        return timeClosed;
     }
 }
