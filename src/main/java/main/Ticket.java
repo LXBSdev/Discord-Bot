@@ -20,7 +20,7 @@ public class Ticket implements Serializable {
     public Ticket (
         @JsonProperty("solved") Boolean lsolved,
         @JsonProperty("ticketId") Integer lticketId,
-        @JsonProperty("userID") String luserId,
+        @JsonProperty("userID") @Nonnull String luserId,
         @JsonProperty("topic") String ltopic,
         @JsonProperty("message") String lmessage,
         @JsonProperty("timeSubmitted") String ltimeSubmitted,
