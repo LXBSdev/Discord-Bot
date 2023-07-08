@@ -1,7 +1,8 @@
 package main;
 
 import java.io.Serializable;
-import java.time.OffsetDateTime;
+
+import javax.annotation.Nonnull;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,11 +10,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Ticket implements Serializable {
     private Boolean solved;
     private Integer ticketId;
-    private String userId;
+    private @Nonnull String userId;
     private String topic;
     private String message;
-    private OffsetDateTime timeSubmitted;
-    private OffsetDateTime timeClosed;
+    private String timeSubmitted;
+    private String timeClosed;
 
     @JsonCreator
     public Ticket (
@@ -22,8 +23,8 @@ public class Ticket implements Serializable {
         @JsonProperty("userID") String luserId,
         @JsonProperty("topic") String ltopic,
         @JsonProperty("message") String lmessage,
-        @JsonProperty("timeSubmitted") OffsetDateTime ltimeSubmitted,
-        @JsonProperty("timeClosed") OffsetDateTime ltimeClosed) {
+        @JsonProperty("timeSubmitted") String ltimeSubmitted,
+        @JsonProperty("timeClosed") String ltimeClosed) {
             solved = lsolved;
             ticketId = lticketId;
             userId = luserId;
@@ -37,7 +38,7 @@ public class Ticket implements Serializable {
         solved = true;
     }
 
-    void ticketSetSolvedTime(OffsetDateTime ltimeClosed) {
+    void ticketSetSolvedTime(String ltimeClosed) {
         timeClosed = ltimeClosed;
     }
 
@@ -61,11 +62,11 @@ public class Ticket implements Serializable {
         return message;
     }
 
-    public OffsetDateTime getTimeSubmitted() {
+    public String getTimeSubmitted() {
         return timeSubmitted;
     }
 
-    public OffsetDateTime getTimeClosed() {
+    public String getTimeClosed() {
         return timeClosed;
     }
 }

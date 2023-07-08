@@ -77,7 +77,7 @@ public class support extends ListenerAdapter {
                                     if (jda.getUserById(userId) == null) {
                                         user = "User unavailable";
                                     } else {
-                                        user = jda.getUserById(userId).getAsMention();
+                                        user = jda.getUserById(userId).getAsTag();
                                     }
                                     if (value.getSolved() == true) {
                                         emb.setTitle("Closed! " + ticketId)
@@ -85,7 +85,7 @@ public class support extends ListenerAdapter {
                                                 .setAuthor(user)
                                                 .addField("Topic", value.getTopic(), false)
                                                 .addField("Message", value.getMessage(), false)
-                                                .setFooter("Time opened " + value.getTimeSubmitted().format(dtf)
+                                                .setFooter("Time opened " + value.getTimeSubmitted()
                                                         + " \u2022 Time closed "
                                                         + OffsetDateTime.now().format(dtf));
                                         event.replyEmbeds(emb.build())
@@ -96,7 +96,7 @@ public class support extends ListenerAdapter {
                                                 .setAuthor(user)
                                                 .addField("Topic", value.getTopic(), false)
                                                 .addField("Message", value.getMessage(), false)
-                                                .setFooter("Ticket opened " + value.getTimeSubmitted().format(dtf));
+                                                .setFooter("Ticket opened " + value.getTimeSubmitted());
                                         event.replyEmbeds(emb.build())
                                                 .addActionRow(Button.primary("close", "close ticket"))
                                                 .queue();
@@ -149,7 +149,7 @@ public class support extends ListenerAdapter {
             TextInput topic = TextInput.create("topic", "Topic", TextInputStyle.SHORT)
                     .setPlaceholder("Subject of this ticket")
                     .setMinLength(1)
-                    .setMaxLength(100)
+                    .setMaxLength(1000)
                     .setRequired(true)
                     .build();
 
@@ -170,17 +170,16 @@ public class support extends ListenerAdapter {
         if (event.getComponentId().equals("close")) {
             Message message = event.getMessage();
             String[] messageRaw = message.getContentRaw().split(" ");
-            String ticketId = messageRaw[2];
+            String ticketId = messageRaw[0];
             EmbedBuilder emb = new EmbedBuilder();
             ObjectMapper mapper = new ObjectMapper();
             Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
             try {
-                map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {
-                });
+                map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {});
                 for (Ticket value : map.values()) {
                     if (value.getTicketId().toString() == ticketId) {
                         value.ticketSetSolvedTrue();
-                        value.ticketSetSolvedTime(OffsetDateTime.now());
+                        value.ticketSetSolvedTime(OffsetDateTime.now().format(dtf));
                         String userId = value.getUserId();
                         User user;
                         String userMention;
@@ -200,7 +199,7 @@ public class support extends ListenerAdapter {
                                         .setAuthor(userMention)
                                         .addField("Topic", value.getTopic(), false)
                                         .addField("Message", value.getMessage(), false)
-                                        .setFooter("Time opened " + value.getTimeSubmitted().format(dtf)
+                                        .setFooter("Time opened " + value.getTimeSubmitted()
                                                 + " \u2022 Time closed " + OffsetDateTime.now().format(dtf))
                                         .build())
                                 .queue();
@@ -208,6 +207,8 @@ public class support extends ListenerAdapter {
                                 "The ticket with the ID **" + ticketId
                                         + "** has been marked as closed\n" + OffsetDateTime.now().format(dtf))
                                 .setEphemeral(true).queue();
+                    } else {
+                        event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
                     }
                 }
             } catch (IOException e) {
@@ -225,6 +226,7 @@ public class support extends ListenerAdapter {
             Integer lticketId = 0;
             ObjectMapper mapper = new ObjectMapper();
             Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
+            EmbedBuilder emb = new EmbedBuilder();
             if (ticketId == null) {
                 lticketId = 1;
                 ticketId = 1;
@@ -232,7 +234,8 @@ public class support extends ListenerAdapter {
                 ticketId++;
                 lticketId = ticketId;
             }
-            Ticket ticket = new Ticket(false, lticketId, user.getId(), topic, message, OffsetDateTime.now(), null);
+
+            Ticket ticket = new Ticket(false, lticketId, user.getId(), topic, message, OffsetDateTime.now().format(dtf), null);
 
             try {
                 map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {
@@ -250,9 +253,17 @@ public class support extends ListenerAdapter {
                 e.printStackTrace();
             }
 
+            emb.setTitle("new Ticket\n" + ticketId)
+                .setColor(0xff55ff)
+                .setAuthor(user.getAsTag())
+                .addField("Topic", topic, false)
+                .addField("Message", message, false)
+                .setFooter("Ticket opened " + OffsetDateTime.now().format(dtf));
+
             user.openPrivateChannel().flatMap(channel -> channel.sendMessage(
                     "Your Support Form has been submited. You'll be informed when your Form has been processed.\nYour Ticket has the ID **"
-                            + "**\n" + OffsetDateTime.now().format(dtf)))
+                    + ticketId
+                    + "**\n" + OffsetDateTime.now().format(dtf)))
                     .queue();
 
             event.reply(
@@ -260,6 +271,10 @@ public class support extends ListenerAdapter {
                             + lticketId + "**.\nKeep this ID, a member of support might get back to you.\n"
                             + OffsetDateTime.now().format(dtf))
                     .setEphemeral(true).queue();
+
+            event.getGuild().getTextChannelById("1122870579809243196").sendMessageFormat(ticketId.toString(), emb.build())
+                .setActionRow(Button.primary("close", "close ticket"))
+                .queue();
         }
     }
 }
