@@ -3,6 +3,9 @@ package main;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Ticket implements Serializable {
     private Boolean solved;
     private Integer ticketId;
@@ -12,15 +15,22 @@ public class Ticket implements Serializable {
     private OffsetDateTime timeSubmitted;
     private OffsetDateTime timeClosed;
 
-    public Ticket(Boolean lsolved, Integer lticketId, String luserId, String ltopic, String lmessage,
-            OffsetDateTime ltimeSubmitted, OffsetDateTime ltimeClosed) {
-        solved = lsolved;
-        ticketId = lticketId;
-        userId = luserId;
-        topic = ltopic;
-        message = lmessage;
-        timeSubmitted = ltimeSubmitted;
-        timeClosed = ltimeClosed;
+    @JsonCreator
+    public Ticket (
+        @JsonProperty("solved") Boolean lsolved,
+        @JsonProperty("ticketId") Integer lticketId,
+        @JsonProperty("userID") String luserId,
+        @JsonProperty("topic") String ltopic,
+        @JsonProperty("message") String lmessage,
+        @JsonProperty("timeSubmitted") OffsetDateTime ltimeSubmitted,
+        @JsonProperty("timeClosed") OffsetDateTime ltimeClosed) {
+            solved = lsolved;
+            ticketId = lticketId;
+            userId = luserId;
+            topic = ltopic;
+            message = lmessage;
+            timeSubmitted = ltimeSubmitted;
+            timeClosed = ltimeClosed;
     }
 
     void ticketSetSolvedTrue() {
