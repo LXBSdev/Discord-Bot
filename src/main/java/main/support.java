@@ -63,10 +63,11 @@ public class support extends ListenerAdapter {
         if (event.getName().equals("ticket")) {
             if (event.getMember().getRoles().toString().contains("Admin")) {
                 if (event.getChannel().getId().equals("1122870579809243196")) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
                     EmbedBuilder emb = new EmbedBuilder();
                     try {
-                        Map<Integer, Ticket> map = new ObjectMapper().readerFor(TicketOptionMapper.class)
-                                .readValue(new File("tickets.json"));
+                        map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {});
                         if (event.getOption("ticket-id") != null) {
                             Integer ticketId = event.getOption("ticket-id").getAsInt();
                             for (Ticket value : map.values()) {
