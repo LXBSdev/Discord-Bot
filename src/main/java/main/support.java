@@ -11,7 +11,6 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
@@ -78,7 +77,7 @@ public class support extends ListenerAdapter {
                                     if (jda.getUserById(userId) == null) {
                                         user = "User unavailable";
                                     } else {
-                                        user = jda.getUserById(userId).getAsTag();
+                                        user = jda.getUserById(userId).getAsMention();
                                     }
                                     if (value.getSolved() == true) {
                                         emb.setTitle("Closed! " + ticketId)
@@ -170,10 +169,10 @@ public class support extends ListenerAdapter {
 
         if (event.getComponentId().equals("close")) {
             Message message = event.getMessage();
-            String ticketId = null;
+            Integer ticketId = null;
             if (message.getEmbeds().size() > 0) {
                 if (message.getEmbeds().get(0) != null) {
-                    ticketId = message.getEmbeds().get(0).getTitle();
+                    ticketId = Integer.parseInt(message.getEmbeds().get(0).getTitle());
                 } else {
                     ticketId = null;
                 }
@@ -187,42 +186,39 @@ public class support extends ListenerAdapter {
                 Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
                 try {
                     map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {});
-                    System.out.println(map);
-                    for (Ticket value : map.values()) {
-                        if (value.getTicketId().toString() == ticketId) {
-                            System.out.println(value);
-                            value.ticketSetSolvedTrue();
-                            value.ticketSetSolvedTime(OffsetDateTime.now().format(dtf));
-                            String userId = value.getUserId();
-                            User user;
-                            String userMention;
-                            if (jda.getUserById(userId) == null) {
-                                userMention = "User unavailable";
-                            } else {
-                                user = jda.getUserById(userId);
-                                userMention = user.getAsMention();
-                                user.openPrivateChannel().flatMap(channel -> channel.sendMessage(user
-                                        + " your support form with the ID **"
-                                        + "** has been marked as closed. The problem should be solved now. If this is not the case, please contact a support member or open a new ticket under the same ticket ID."))
-                                        .queue();
-                            }
-                            message.editMessageEmbeds(
-                                    emb.setTitle("Closed! " + ticketId)
-                                            .setColor(0xff55ff)
-                                            .setAuthor(userMention)
-                                            .addField("Topic", value.getTopic(), false)
-                                            .addField("Message", value.getMessage(), false)
-                                            .setFooter("Time opened " + value.getTimeSubmitted()
-                                                    + " \u2022 Time closed " + OffsetDateTime.now().format(dtf))
-                                            .build())
-                                    .queue();
-                            event.reply(
-                                    "The ticket with the ID **" + ticketId
-                                            + "** has been marked as closed\n" + OffsetDateTime.now().format(dtf))
-                                    .setEphemeral(true).queue();
+                    if (map.containsKey(ticketId)) {
+                        Ticket ticket = map.get(ticketId);
+                        ticket.ticketSetSolvedTrue();
+                        ticket.ticketSetSolvedTime(OffsetDateTime.now().format(dtf));
+                        String userId = ticket.getUserId();
+                        User user;
+                        String userMention;
+                        if (jda.getUserById(userId) == null) {
+                            userMention = "User unavailable";
                         } else {
-                            event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
+                            user = jda.getUserById(userId);
+                            userMention = user.getAsMention();
+                            user.openPrivateChannel().flatMap(channel -> channel.sendMessage(user
+                                + " your support form with the ID **"
+                                + "** has been marked as closed. The problem should be solved now. If this is not the case, please contact a support member or open a new ticket under the same ticket ID."))
+                                .queue();
                         }
+                        message.editMessageEmbeds(
+                            emb.setTitle("Closed! " + ticketId)
+                                .setColor(0xff55ff)
+                                .setAuthor(userMention)
+                                .addField("Topic", ticket.getTopic(), false)
+                                .addField("Message", ticket.getMessage(), false)
+                                .setFooter("Time opened " + ticket.getTimeSubmitted()
+                                    + " \u2022 Time closed " + OffsetDateTime.now().format(dtf))
+                                .build())
+                                .queue();
+                        event.reply(
+                            "The ticket with the ID **" + ticketId
+                            + "** has been marked as closed\n" + OffsetDateTime.now().format(dtf))
+                            .setEphemeral(true).queue();
+                    } else {
+                        event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -284,7 +280,7 @@ public class support extends ListenerAdapter {
 
             emb.setTitle(ticketId.getTicketId().toString())
                 .setColor(0xff55ff)
-                .setAuthor(user.getAsTag())
+                .setAuthor(user.getAsMention())
                 .addField("Topic", topic, false)
                 .addField("Message", message, false)
                 .setFooter("Ticket opened " + OffsetDateTime.now().format(dtf));
