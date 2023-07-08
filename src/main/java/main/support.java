@@ -92,9 +92,9 @@ public class support extends ListenerAdapter {
                                         event.replyEmbeds(emb.build())
                                                 .queue();
                                     } else {
-                                        emb.setTitle(user)
+                                        emb.setTitle(ticketId.toString())
                                                 .setColor(0xff55ff)
-                                                .setAuthor(ticketId.toString())
+                                                .setAuthor(user)
                                                 .addField("Topic", value.getTopic(), false)
                                                 .addField("Message", value.getMessage(), false)
                                                 .setFooter("Ticket opened " + value.getTimeSubmitted());
@@ -180,9 +180,7 @@ public class support extends ListenerAdapter {
             } else {
                 ticketId = null;
             }
-            if (ticketId == null) {
-                event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
-            } else {
+            if (ticketId != null) {
                 System.out.println(ticketId);
                 EmbedBuilder emb = new EmbedBuilder();
                 ObjectMapper mapper = new ObjectMapper();
@@ -204,7 +202,7 @@ public class support extends ListenerAdapter {
                                 user = jda.getUserById(userId);
                                 userMention = user.getAsMention();
                                 user.openPrivateChannel().flatMap(channel -> channel.sendMessage(user
-                                        + " your support form with the ID **" + ticketId
+                                        + " your support form with the ID **"
                                         + "** has been marked as closed. The problem should be solved now. If this is not the case, please contact a support member or open a new ticket under the same ticket ID."))
                                         .queue();
                             }
@@ -229,6 +227,8 @@ public class support extends ListenerAdapter {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            } else {
+                event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
             }
         }
     }
@@ -282,9 +282,9 @@ public class support extends ListenerAdapter {
                 e.printStackTrace();
             }
 
-            emb.setTitle(user.getAsTag())
+            emb.setTitle(ticketId.getTicketId().toString())
                 .setColor(0xff55ff)
-                .setAuthor(ticketId.getTicketId().toString())
+                .setAuthor(user.getAsTag())
                 .addField("Topic", topic, false)
                 .addField("Message", message, false)
                 .setFooter("Ticket opened " + OffsetDateTime.now().format(dtf));
