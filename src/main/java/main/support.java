@@ -223,32 +223,43 @@ public class support extends ListenerAdapter {
             String topic = event.getValue("topic").getAsString();
             String message = event.getValue("message").getAsString();
             User user = event.getUser();
-            Integer lticketId = 0;
+            TicketId ticketId;
             ObjectMapper mapper = new ObjectMapper();
-            Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
+            Map<Integer, Ticket> tickets = new HashMap<Integer, Ticket>();
+            Map<String, TicketId> ticketIdMap = new HashMap<String, TicketId>();
             EmbedBuilder emb = new EmbedBuilder();
-            if (ticketId == null) {
-                lticketId = 1;
-                ticketId = 1;
-            } else {
-                ticketId++;
-                lticketId = ticketId;
-            }
-
-            Ticket ticket = new Ticket(false, lticketId, user.getId(), topic, message, OffsetDateTime.now().format(dtf), null);
 
             try {
-                map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {
-                });
-                map.put(lticketId, ticket);
+                ticketIdMap = mapper.readValue(new File("ticketId.json"), new TypeReference<Map<String, TicketId>>() {});
+                ticketId.setTicketId(ticketIdMap.get("Ticket ID").getTicketId() + 1);
+                ticketIdMap.put("Ticket ID", ticketId);
             } catch (FileNotFoundException e) {
-                map.put(lticketId, ticket);
+                ticketId.setTicketId(1);
+                ticketIdMap.put("Ticket ID", ticketId);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             try {
-                mapper.writeValue(new File("tickets.json"), map);
+                mapper.writeValue(new File("ticketId.json"), ticketIdMap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Ticket ticket = new Ticket(false, ticketId.getTicketId(), user.getId(), topic, message, OffsetDateTime.now().format(dtf), null);
+
+            try {
+                tickets = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {
+                });
+                tickets.put(ticketId.getTicketId(), ticket);
+            } catch (FileNotFoundException e) {
+                tickets.put(ticketId.getTicketId(), ticket);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                mapper.writeValue(new File("tickets.json"), tickets);
             } catch (IOException e) {
                 e.printStackTrace();
             }
