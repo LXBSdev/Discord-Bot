@@ -62,7 +62,7 @@ public class support extends ListenerAdapter {
 
         if (event.getName().equals("ticket")) {
             if (event.getMember().getRoles().toString().contains("Admin")) {
-                if (event.getChannel().getId().equals("1122870579809243196")) {
+                if (event.getChannel().getId().equals("1122870579809243196") | event.getChannel().getId().equals("1059792277452623872") | event.getChannel().getId().equals("1062121062067863602") | event.getChannel().getId().equals("1125757185113198645")) {
                     ObjectMapper mapper = new ObjectMapper();
                     Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
                     EmbedBuilder emb = new EmbedBuilder();
@@ -131,8 +131,8 @@ public class support extends ListenerAdapter {
                         e.printStackTrace();
                     }
                 } else {
-                    event.reply("You can only call this method in the "
-                            + event.getGuild().getTextChannelById("1122870579809243196").getAsMention() + " channel")
+                    event.reply("You can only call this method in the channels "
+                            + event.getGuild().getTextChannelById("1122870579809243196").getAsMention() + ", " + event.getGuild().getTextChannelById("1059792277452623872").getAsMention() + ", " + event.getGuild().getTextChannelById("1062121062067863602").getAsMention() + " or " + event.getGuild().getTextChannelById("1125757185113198645").getAsMention())
                             .setEphemeral(true)
                             .queue();
                 }
@@ -179,7 +179,6 @@ public class support extends ListenerAdapter {
                 ticketId = null;
             }
             if (ticketId != null) {
-                System.out.println(ticketId);
                 EmbedBuilder emb = new EmbedBuilder();
                 ObjectMapper mapper = new ObjectMapper();
                 Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
@@ -192,15 +191,21 @@ public class support extends ListenerAdapter {
                         String userId = ticket.getUserId();
                         User user;
                         String userMention;
-                        if (jda.getUserById(userId) == null) {
-                            userMention = "User unavailable";
+                        System.out.println(userId);
+                        System.out.println(jda.retrieveUserById(userId));
+                        if (ticket.getUserId() == null) {
+                            userMention = "No user was submitted";
                         } else {
-                            user = jda.getUserById(userId);
-                            userMention = user.getAsMention();
-                            user.openPrivateChannel().flatMap(channel -> channel.sendMessage(user
-                                + " your support form with the ID **"
-                                + "** has been marked as closed. The problem should be solved now. If this is not the case, please contact a support member or open a new ticket under the same ticket ID."))
-                                .queue();
+                            if (jda.getUserById(userId) == null) {
+                                userMention = "User unavailable";
+                            } else {
+                                user = jda.getUserById(userId);
+                                userMention = user.getAsMention();
+                                user.openPrivateChannel().flatMap(channel -> channel.sendMessage(user
+                                    + " your support form with the ID **"
+                                    + "** has been marked as closed. The problem should be solved now. If this is not the case, please contact a support member or open a new ticket under the same ticket ID."))
+                                    .queue();
+                            }
                         }
                         message.editMessageEmbeds(
                             emb.setTitle("Closed! " + ticketId)
