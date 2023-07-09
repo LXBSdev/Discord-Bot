@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 
 public class commands extends ListenerAdapter {
 
-    private String getActivities(List activitiesList) {
+    private String getActivities(List<Activity> activitiesList) {
         String activitie = "";
         if (!activitiesList.isEmpty()) {
             Activity tempActiv = (Activity) activitiesList.get(0);
@@ -27,7 +27,7 @@ public class commands extends ListenerAdapter {
         return activitie;
     }
 
-    private String getRolesAsString(List rolesList) {
+    private String getRolesAsString(List<Role> rolesList) {
         String roles = "";
         if (!rolesList.isEmpty()) {
             Role tempRole = (Role) rolesList.get(0);

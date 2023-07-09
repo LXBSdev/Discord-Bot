@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class contextMenu extends ListenerAdapter {
 
-    private String getActivities(List activitiesList) {
+    private String getActivities(List<Activity> activitiesList) {
         String activitie = "";
         if (!activitiesList.isEmpty()) {
             Activity tempActiv = (Activity) activitiesList.get(0);
@@ -26,7 +26,7 @@ public class contextMenu extends ListenerAdapter {
         return activitie;
     }
 
-    private String getRolesAsString(List rolesList) {
+    private String getRolesAsString(List<Role> rolesList) {
         String roles = "";
         if (!rolesList.isEmpty()) {
             Role tempRole = (Role) rolesList.get(0);
