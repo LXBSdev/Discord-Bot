@@ -70,40 +70,39 @@ public class support extends ListenerAdapter {
                         map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {});
                         if (event.getOption("ticket-id") != null) {
                             Integer ticketId = event.getOption("ticket-id").getAsInt();
-                            for (Ticket value : map.values()) {
-                                if (value.getTicketId() == ticketId) {
-                                    String userId = value.getUserId();
-                                    String user;
-                                    if (jda.getUserById(userId) == null) {
-                                        user = "User unavailable";
-                                    } else {
-                                        user = jda.getUserById(userId).getAsMention();
-                                    }
-                                    if (value.getSolved() == true) {
-                                        emb.setTitle("Closed! " + ticketId)
-                                                .setColor(0xff55ff)
-                                                .setAuthor(user)
-                                                .addField("Topic", value.getTopic(), false)
-                                                .addField("Message", value.getMessage(), false)
-                                                .setFooter("Time opened " + value.getTimeSubmitted()
-                                                        + " \u2022 Time closed "
-                                                        + OffsetDateTime.now().format(dtf));
-                                        event.replyEmbeds(emb.build())
-                                                .queue();
-                                    } else {
-                                        emb.setTitle(ticketId.toString())
-                                                .setColor(0xff55ff)
-                                                .setAuthor(user)
-                                                .addField("Topic", value.getTopic(), false)
-                                                .addField("Message", value.getMessage(), false)
-                                                .setFooter("Ticket opened " + value.getTimeSubmitted());
-                                        event.replyEmbeds(emb.build())
-                                                .addActionRow(Button.primary("close", "close ticket"))
-                                                .queue();
-                                    }
+                            if (map.containsKey(ticketId)) {
+                                Ticket ticket = map.get(ticketId);
+                                String userId = ticket.getUserId();
+                                String user;
+                                if (jda.getUserById(userId) == null) {
+                                    user = "User unavailable";
                                 } else {
-                                    event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
+                                    user = jda.getUserById(userId).getAsMention();
                                 }
+                                if (ticket.getSolved() == true) {
+                                    emb.setTitle("Closed! " + ticketId)
+                                        .setColor(0xff55ff)
+                                        .setAuthor(user)
+                                        .addField("Topic", ticket.getTopic(), false)
+                                        .addField("Message", ticket.getMessage(), false)
+                                        .setFooter("Time opened " + ticket.getTimeSubmitted()
+                                            + " \u2022 Time closed "
+                                            + OffsetDateTime.now().format(dtf));
+                                    event.replyEmbeds(emb.build())
+                                        .queue();
+                                } else {
+                                    emb.setTitle(ticketId.toString())
+                                        .setColor(0xff55ff)
+                                        .setAuthor(user)
+                                        .addField("Topic", ticket.getTopic(), false)
+                                        .addField("Message", ticket.getMessage(), false)
+                                        .setFooter("Ticket opened " + ticket.getTimeSubmitted());
+                                    event.replyEmbeds(emb.build())
+                                        .addActionRow(Button.primary("close", "close ticket"))
+                                        .queue();
+                                }
+                            } else {
+                                event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
                             }
                         } else {
                             ArrayList<Ticket> tickets = new ArrayList<>();
@@ -220,6 +219,8 @@ public class support extends ListenerAdapter {
                     } else {
                         event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
                     }
+                } catch (MismatchedInputException e) {
+                    event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
