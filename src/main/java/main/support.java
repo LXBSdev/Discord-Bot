@@ -39,25 +39,18 @@ public class support extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         if (event.getName().equals("support")) {
-            TextInput topic = TextInput.create("topic", "Topic", TextInputStyle.SHORT)
-                    .setPlaceholder("Subject of this ticket")
-                    .setMinLength(1)
-                    .setMaxLength(100)
-                    .setRequired(true)
-                    .build();
+            EmbedBuilder emb = new EmbedBuilder();
 
-            TextInput message = TextInput.create("message", "Message", TextInputStyle.PARAGRAPH)
-                    .setPlaceholder("Your message")
-                    .setMinLength(1)
-                    .setMaxLength(1000)
-                    .setRequired(true)
-                    .build();
+            emb.setTitle("LXBS Support")
+                .setColor(0xff55ff)
+                .setDescription("<:ff55ffForTheWin:1118108459431374898> Welcome to the support center.\nIf you have a problem or question you can submit a support Ticket.")
+                .addField("Email", "[mailto:support@lxbs.online](support@lxbs.online)", false)
+                .addField("Website", "[https://lxbs.online](lxbs.online)", false)
+                .addField("Contact", "[mailto:contact@lxbs.online](contact@lxbs.online)", false)
+                .setImage("https://cdn.discordapp.com/attachments/837779743486378075/1122872440872247437/logo-magenta.png")
+                .setFooter("LXBS Support");
 
-            Modal modal = Modal.create("ticket", "Support Ticket")
-                    .addActionRows(ActionRow.of(topic), ActionRow.of(message))
-                    .build();
-
-            event.replyModal(modal).queue();
+            event.replyEmbeds(emb.build()).addActionRow(Button.primary("ticket", "Support ticket")).setEphemeral(true).queue();
         }
 
         if (event.getName().equals("ticket")) {
@@ -72,56 +65,29 @@ public class support extends ListenerAdapter {
                             Integer ticketId = event.getOption("ticket-id").getAsInt();
                             if (map.containsKey(ticketId)) {
                                 Ticket ticket = map.get(ticketId);
-                                @Nonnull String userId = ticket.getUserId();
-                                try {
-                                    jda.retrieveUserById(userId).map(User::getAsMention).queue(mention -> {
-                                        if (ticket.getSolved() == true) {
-                                            emb.setTitle(ticketId.toString())
-                                                .setColor(0xff55ff)
-                                                .setAuthor("**Closed** \u2022 " + mention)
-                                                .addField("Topic", ticket.getTopic(), false)
-                                                .addField("Message", ticket.getMessage(), false)
-                                                .setFooter("Time opened " + ticket.getTimeSubmitted()
-                                                    + " \u2022 Time closed "
-                                                    + OffsetDateTime.now().format(dtf));
-                                            event.replyEmbeds(emb.build())
-                                                .queue();
-                                        } else {
-                                            emb.setTitle(ticketId.toString())
-                                                .setColor(0xff55ff)
-                                                .setAuthor(mention)
-                                                .addField("Topic", ticket.getTopic(), false)
-                                                .addField("Message", ticket.getMessage(), false)
-                                                .setFooter("Ticket opened " + ticket.getTimeSubmitted());
-                                            event.replyEmbeds(emb.build())
-                                                .addActionRow(Button.primary("close", "close ticket"))
-                                                .queue();
-                                        }
-                                    });
-                                } catch (NullPointerException e){
-                                    String mention = "user unavailable";
-                                    if (ticket.getSolved() == true) {
-                                        emb.setTitle(ticketId.toString())
-                                            .setColor(0xff55ff)
-                                            .setAuthor("**Closed** \u2022 " + mention)
-                                            .addField("Topic", ticket.getTopic(), false)
-                                            .addField("Message", ticket.getMessage(), false)
-                                            .setFooter("Time opened " + ticket.getTimeSubmitted()
-                                                + " \u2022 Time closed "
-                                                + OffsetDateTime.now().format(dtf));
-                                        event.replyEmbeds(emb.build())
-                                            .queue();
-                                    } else {
-                                        emb.setTitle(ticketId.toString())
-                                            .setColor(0xff55ff)
-                                            .setAuthor(mention)
-                                            .addField("Topic", ticket.getTopic(), false)
-                                            .addField("Message", ticket.getMessage(), false)
-                                            .setFooter("Ticket opened " + ticket.getTimeSubmitted());
-                                        event.replyEmbeds(emb.build())
-                                            .addActionRow(Button.primary("close", "close ticket"))
-                                            .queue();
-                                    }
+                                String userId = ticket.getUserId();
+                                User user = event.getJDA().retrieveUserById(userId).complete();
+                                if (ticket.getSolved() == true) {
+                                    emb.setTitle(ticketId.toString())
+                                        .setColor(0xff55ff)
+                                        .setAuthor("**Closed** \u2022 " + user.getAsMention())
+                                        .addField("Topic", ticket.getTopic(), false)
+                                        .addField("Message", ticket.getMessage(), false)
+                                        .setFooter("Time opened " + ticket.getTimeSubmitted()
+                                            + " \u2022 Time closed "
+                                            + OffsetDateTime.now().format(dtf));
+                                    event.replyEmbeds(emb.build())
+                                        .queue();
+                                } else {
+                                    emb.setTitle(ticketId.toString())
+                                        .setColor(0xff55ff)
+                                        .setAuthor(user.getAsMention())
+                                        .addField("Topic", ticket.getTopic(), false)
+                                        .addField("Message", ticket.getMessage(), false)
+                                        .setFooter("Ticket opened " + ticket.getTimeSubmitted());
+                                    event.replyEmbeds(emb.build())
+                                        .addActionRow(Button.primary("close", "close ticket"))
+                                        .queue();
                                 }
                             } else {
                                 event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
@@ -215,45 +181,31 @@ public class support extends ListenerAdapter {
                             ticket.ticketSetSolvedTime(OffsetDateTime.now().format(dtf));
                             map.put(ticketId, ticket);
                             String userId = ticket.getUserId();
-                            try {
-                                User user = jda.retrieveUserById(userId).complete();
-                                user.openPrivateChannel().flatMap(channel -> channel.sendMessage(user
-                                    + " your support form with the ID **"
-                                    + "** has been marked as closed. The problem should be solved now. If this is not the case, please contact a support member or open a new ticket under the same ticket ID."))
-                                    .queue();
-                                message.editMessageEmbeds(
-                                    emb.setTitle(ticketId.toString())
-                                        .setColor(0xff55ff)
-                                        .setAuthor("**Closed** \u2022 " + user.getAsMention())
-                                        .addField("Topic", ticket.getTopic(), false)
-                                        .addField("Message", ticket.getMessage(), false)
-                                        .setFooter("Time opened " + ticket.getTimeSubmitted()
-                                            + " \u2022 Time closed " + OffsetDateTime.now().format(dtf))
-                                        .build())
-                                    .queue();
-                                message.addReaction("1118108459431374898");
-                                event.reply(
-                                    "The ticket with the ID **" + ticketId
-                                    + "** has been marked as closed\n" + OffsetDateTime.now().format(dtf))
-                                    .setEphemeral(true).queue();
-                            } catch (NullPointerException e) {
-                                String user = "user unavailable";
-                                message.editMessageEmbeds(
-                                    emb.setTitle(ticketId.toString())
-                                        .setColor(0xff55ff)
-                                        .setAuthor("**Closed** \u2022 " +  user)
-                                        .addField("Topic", ticket.getTopic(), false)
-                                        .addField("Message", ticket.getMessage(), false)
-                                        .setFooter("Time opened " + ticket.getTimeSubmitted()
-                                            + " \u2022 Time closed " + OffsetDateTime.now().format(dtf))
-                                        .build())
-                                    .queue();
-                                message.addReaction("1118108459431374898");
-                                event.reply(
-                                    "The ticket with the ID **" + ticketId
-                                    + "** has been marked as closed\n" + OffsetDateTime.now().format(dtf))
-                                    .setEphemeral(true).queue();
-                            }
+                            User user = event.getJDA().retrieveUserById(userId).complete();
+                            EmbedBuilder embUser = new EmbedBuilder();
+
+                            embUser.setTitle("Ticket solved")
+                                .setColor(0xff55ff)
+                                .setDescription("Your support Ticket has been solved. The problem should be fixed now, if that shouldn't be the case please contact a member of support.")
+                                .addField("Ticket ID", ticket.getTicketId().toString(), false)
+                                .setFooter("Time opened " + ticket.getTimeSubmitted()
+                                        + " \u2022 Time closed " + OffsetDateTime.now().format(dtf));
+
+                            user.openPrivateChannel().flatMap(channel -> channel.sendMessageEmbeds(embUser.build())).queue();
+                            message.editMessageEmbeds(
+                                emb.setTitle(ticketId.toString())
+                                    .setColor(0xff55ff)
+                                    .setAuthor("**Closed** \u2022 " + user.getAsMention())
+                                    .addField("Topic", ticket.getTopic(), false)
+                                    .addField("Message", ticket.getMessage(), false)
+                                    .setFooter("Time opened " + ticket.getTimeSubmitted()
+                                        + " \u2022 Time closed " + OffsetDateTime.now().format(dtf))
+                                    .build())
+                                .queue();
+                            event.reply(
+                                "The ticket with the ID **" + ticketId
+                                + "** has been marked as closed\n" + OffsetDateTime.now().format(dtf))
+                                .setEphemeral(true).queue();
                         }
                     } else {
                         event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
@@ -335,8 +287,7 @@ public class support extends ListenerAdapter {
             
             embUser.setTitle("Ticket submitted")
                 .setColor(0xff55ff)
-                .setAuthor(user.getName())
-                .setDescription("Your support Ticket has been submitted. Keep your Ticket ID, a member of support might get back to you. You will also be asked for it if you have any further questions to your ticket.")
+                .setDescription("Your support Ticket has been submitted. Keep your Ticket ID, a member of support might get back to you. You will also be asked for it if you have any further questions to your ticket. You will be informed when the ticket is closed.")
                 .addField("Ticket ID", ticketId.getTicketId().toString(), false)
                 .addField("Topic", topic, false)
                 .addField("Message", message, false)
