@@ -75,7 +75,7 @@ public class support extends ListenerAdapter {
                                 if (ticket.getSolved() == true) {
                                     emb.setTitle(ticketId.toString())
                                         .setColor(0xff55ff)
-                                        .setAuthor("**Closed** \u2022 " + user.getAsMention())
+                                        .setAuthor("Closed \u2022 " + user.getAsMention())
                                         .addField("Topic", ticket.getTopic(), false)
                                         .addField("Message", ticket.getMessage(), false)
                                         .setFooter("Time opened " + ticket.getTimeSubmitted()
