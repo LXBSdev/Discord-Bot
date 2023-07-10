@@ -211,5 +211,9 @@ public class commands extends ListenerAdapter {
                     return;
             }
         }
+
+        if (command.equals("socials")) {
+            EmbedBuilder emb = new EmbedBuilder();
+        }
     }
 }
