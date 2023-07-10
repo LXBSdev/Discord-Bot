@@ -83,7 +83,7 @@ public class support extends ListenerAdapter {
                                             + OffsetDateTime.now().format(dtf));
                                     event.replyEmbeds(emb.build())
                                         .addActionRow(
-                                            Button.primary("refresh", Emoji.fromUnicode("U+1F504")))
+                                            Button.secondary("refresh", Emoji.fromUnicode("U+1F504")))
                                         .queue();
                                 } else {
                                     emb.setTitle(ticketId.toString())
@@ -94,7 +94,7 @@ public class support extends ListenerAdapter {
                                         .setFooter("Ticket opened " + ticket.getTimeSubmitted());
                                     event.replyEmbeds(emb.build())
                                         .addActionRow(
-                                            Button.primary("refresh", Emoji.fromUnicode("U+1F504")),
+                                            Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
                                             Button.primary("close", "close ticket"))
                                         .queue();
                                 }
@@ -115,7 +115,7 @@ public class support extends ListenerAdapter {
                                 .setColor(0xff55ff);
                             event.replyEmbeds(emb.build())
                                 .addActionRow(
-                                    Button.primary("refresh", Emoji.fromUnicode("U+1F504")))
+                                    Button.secondary("refresh", Emoji.fromUnicode("U+1F504")))
                                 .queue();
                         }
                     } catch (FileNotFoundException e) {
@@ -216,7 +216,7 @@ public class support extends ListenerAdapter {
                                 .queue();
                             message.editMessageComponents(
                                     ActionRow.of(
-                                        Button.primary("refresh", Emoji.fromUnicode("U+1F504"))))
+                                        Button.secondary("refresh", Emoji.fromUnicode("U+1F504"))))
                                 .queue();
                             event.reply(
                                 "The ticket with the ID **" + ticketId
@@ -267,7 +267,7 @@ public class support extends ListenerAdapter {
                     message.editMessageEmbeds(emb.build()).queue();
                     message.editMessageComponents(
                         ActionRow.of(
-                            Button.primary("refresh", Emoji.fromUnicode("U+1F504"))))
+                            Button.secondary("refresh", Emoji.fromUnicode("U+1F504"))))
                         .queue();
                     event.reply("dont").setEphemeral(true).queue();
                 } catch (IOException e) {
@@ -293,7 +293,7 @@ public class support extends ListenerAdapter {
                         .queue();
                         message.editMessageComponents(
                             ActionRow.of(
-                                Button.primary("refresh", Emoji.fromUnicode("U+1F504"))))
+                                Button.secondary("refresh", Emoji.fromUnicode("U+1F504"))))
                         .queue();
                         event.reply("dont").setEphemeral(true).queue();
                     } else {
@@ -308,7 +308,7 @@ public class support extends ListenerAdapter {
                         .queue();
                         message.editMessageComponents(
                             ActionRow.of(
-                                Button.primary("refresh", Emoji.fromUnicode("U+1F504")),
+                                Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
                                 Button.primary("close", "close ticket")))
                         .queue();
                         event.reply("dont").setEphemeral(true).queue();
@@ -391,7 +391,7 @@ public class support extends ListenerAdapter {
 
             event.getGuild().getTextChannelById("1122870579809243196").sendMessageEmbeds(emb.build())
                 .setActionRow(
-                    Button.primary("refresh", Emoji.fromUnicode("U+1F504")),
+                    Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
                     Button.primary("close", "close ticket"))
                 .queue();
         }
