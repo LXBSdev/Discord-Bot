@@ -43,14 +43,12 @@ public class support extends ListenerAdapter {
 
             emb.setTitle("LXBS Support")
                 .setColor(0xff55ff)
-                .setDescription("<:ff55ffForTheWin:1118108459431374898> Welcome to the support center.\nIf you have a problem or question you can submit a support Ticket.")
-                .addField("Email", "[mailto:support@lxbs.online](support@lxbs.online)", false)
-                .addField("Website", "[https://lxbs.online](lxbs.online)", false)
-                .addField("Contact", "[mailto:contact@lxbs.online](contact@lxbs.online)", false)
-                .setImage("https://cdn.discordapp.com/attachments/837779743486378075/1122872440872247437/logo-magenta.png")
-                .setFooter("LXBS Support");
+                .setDescription("Welcome to the support center.\nIf you have a problem or question you can submit a support Ticket.")
+                .addField("Email", "support@lxbs.online", true)
+                .addField("Website", "https://lxbs.online", true)
+                .setFooter("LXBS Support", "https://cdn.discordapp.com/attachments/837779743486378075/1122872440872247437/logo-magenta.png");
 
-            event.replyEmbeds(emb.build()).addActionRow(Button.primary("ticket", "Support ticket")).setEphemeral(true).queue();
+            event.replyEmbeds(emb.build()).addActionRow(Button.primary("ticket", "Support ticket"), Button.link("http://lxbs.online", "lxbs.online"), Button.link("http://lxbs.online/support", "lxbs.online/support")).setEphemeral(true).queue();
         }
 
         if (event.getName().equals("ticket")) {
