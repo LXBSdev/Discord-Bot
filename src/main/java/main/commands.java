@@ -220,9 +220,10 @@ public class commands extends ListenerAdapter {
             Long tiktokId = Long.parseLong("871842704450027530");
             Long redditId = Long.parseLong("811957418878697503");
             Long githubId = Long.parseLong("763440516066574338");
+            Long lxbsId = Long.parseLong("1118108459431374898");
 
             event.replyEmbeds(
-                emb.setTitle("socials")
+                emb.setTitle("Socials")
                     .setDescription("Here you can find the links to all our socials.")
                     .setColor(0xff55ff)
                     .addField("Youtube", "[www.youtube.com/@lxbsminecraftserver](https://www.youtube.com/@lxbsminecraftserver)", false)
@@ -239,7 +240,8 @@ public class commands extends ListenerAdapter {
                     )
                 .addActionRow(
                     Button.link("https://www.reddit.com/r/lxbs", "Twitter").withEmoji(Emoji.fromCustom("reddit", redditId, false)),
-                    Button.link("https://www.github.com/LXBSdev", "Twitter").withEmoji(Emoji.fromCustom("github", githubId, false))
+                    Button.link("https://www.github.com/LXBSdev", "Twitter").withEmoji(Emoji.fromCustom("github", githubId, false)),
+                    Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false))
                     )
                 .queue();
         }
