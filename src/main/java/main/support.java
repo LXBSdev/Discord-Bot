@@ -83,7 +83,8 @@ public class support extends ListenerAdapter {
                                             + OffsetDateTime.now().format(dtf));
                                     event.replyEmbeds(emb.build())
                                         .addActionRow(
-                                            Button.secondary("refresh", Emoji.fromUnicode("U+1F504")))
+                                            Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
+                                            Button.primary("reply", "reply"))
                                         .queue();
                                 } else {
                                     emb.setTitle(ticketId.toString())
@@ -95,7 +96,8 @@ public class support extends ListenerAdapter {
                                     event.replyEmbeds(emb.build())
                                         .addActionRow(
                                             Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
-                                            Button.primary("close", "close ticket"))
+                                            Button.primary("close", "close ticket"),
+                                            Button.primary("reply", "reply"))
                                         .queue();
                                 }
                             } else {
@@ -216,7 +218,8 @@ public class support extends ListenerAdapter {
                                 .queue();
                             message.editMessageComponents(
                                     ActionRow.of(
-                                        Button.secondary("refresh", Emoji.fromUnicode("U+1F504"))))
+                                        Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
+                                        Button.primary("reply", "reply")))
                                 .queue();
                             event.reply(
                                 "The ticket with the ID **" + ticketId
@@ -285,7 +288,7 @@ public class support extends ListenerAdapter {
                                     + " \u2022 Time closed "
                                     + OffsetDateTime.now().format(dtf))
                                 .build())
-                        .setActionRow(Button.secondary("refresh", Emoji.fromUnicode("U+1F504"))).queue();
+                        .setActionRow(Button.secondary("refresh", Emoji.fromUnicode("U+1F504")), Button.primary("reply", "reply")).queue();
                     } else {
                         event.deferEdit().setEmbeds(
                             emb.setTitle(ticketId.toString())
@@ -295,7 +298,7 @@ public class support extends ListenerAdapter {
                                 .addField("Message", ticket.getMessage(), false)
                                 .setFooter("Ticket opened " + ticket.getTimeSubmitted())
                                 .build())
-                        .setActionRow(Button.secondary("refresh", Emoji.fromUnicode("U+1F504")), Button.primary("close", "close ticket")).queue();
+                        .setActionRow(Button.secondary("refresh", Emoji.fromUnicode("U+1F504")), Button.primary("close", "close ticket"), Button.primary("reply", "reply")).queue();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -376,7 +379,8 @@ public class support extends ListenerAdapter {
             event.getGuild().getTextChannelById("1122870579809243196").sendMessageEmbeds(emb.build())
                 .setActionRow(
                     Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
-                    Button.primary("close", "close ticket"))
+                    Button.primary("close", "close ticket"),
+                    Button.primary("reply", "reply"))
                 .queue();
         }
     }
