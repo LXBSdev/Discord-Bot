@@ -305,6 +305,26 @@ public class support extends ListenerAdapter {
                 }
             }
         }
+
+        if (event.getComponentId().equals("reply")) {
+            Message messageOG = event.getMessage();
+            String user = messageOG.getEmbeds().get(0).getAuthor().getName();
+            String topic = messageOG.getEmbeds().get(0).getFields().get(0).getValue();
+            String ticketId = messageOG.getEmbeds().get(0).getTitle();
+            
+            TextInput message = TextInput.create("message", ticketId + " \u2022 Topic: " + topic + " \u2022 Your Message:", TextInputStyle.PARAGRAPH)
+                    .setPlaceholder("Your message")
+                    .setMinLength(1)
+                    .setMaxLength(1000)
+                    .setRequired(true)
+                    .build();
+
+            Modal modal = Modal.create("ticket", "Reply to " + user)
+                    .addActionRows(ActionRow.of(message))
+                    .build();
+
+            event.replyModal(modal).queue();
+        }
     }
 
     @Override
