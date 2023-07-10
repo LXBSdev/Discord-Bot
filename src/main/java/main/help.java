@@ -53,8 +53,7 @@ public class help extends ListenerAdapter {
             Long lxbsId = Long.parseLong("1118108459431374898");
 
             if (event.getValues().get(0).equals("command")) {
-                System.out.println(message.getEmbeds().get(0).getTitle());
-                message.editMessageEmbeds(
+                event.deferEdit().setEmbeds(
                     emb.setTitle("LXBS Commands")
                         .setDescription("List of all available commands")
                         .setColor(0xff55ff)
@@ -69,21 +68,20 @@ public class help extends ListenerAdapter {
                         .addField("</colour:1125414321359421472>", "The colour you want to be displayed as", false)
                         .setFooter("LXBS Help", "https://cdn.discordapp.com/attachments/837779743486378075/1122872440872247437/logo-magenta.png")
                         .build())
+                    .setActionRows(
+                        ActionRow.of(
+                            SelectMenu.create("help")
+                                .setPlaceholder("Give me information on...")
+                                .addOption("Commands", "command", "View all available commands.", Emoji.fromCustom("slash", slashId, false))
+                                .addOption("Support", "support", "View support options.", Emoji.fromCustom("support", supportId, false))
+                                .build()),
+                        ActionRow.of(
+                            Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false))))
                     .queue();
-
-                SelectMenu menu = SelectMenu.create("help")
-                    .setPlaceholder("Give me information on...")
-                    .addOption("Commands", "command", "View all available commands.", Emoji.fromCustom("slash", slashId, false))
-                    .addOption("Support", "support", "View support options.", Emoji.fromCustom("support", supportId, false))
-                    .build();
-
-                message.editMessageComponents(
-                    ActionRow.of(menu),
-                    ActionRow.of(
-                         Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false)))
-                    ).queue();
-            } else if (event.getValues().get(0).equals("support")) {
-                message.editMessageEmbeds(
+            }
+            
+            if (event.getValues().get(0).equals("support")) {
+                event.deferEdit().setEmbeds(
                     emb.setTitle("Support? Sure.")
                         .setColor(0xff55ff)
                         .setDescription("Welcome to the support center.\nIf you have a problem or question you can submit a support Ticket.")
@@ -91,23 +89,18 @@ public class help extends ListenerAdapter {
                         .addField("Website", "https://lxbs.online", true)
                         .setFooter("LXBS Support", "https://cdn.discordapp.com/attachments/837779743486378075/1122872440872247437/logo-magenta.png")
                         .build())
+                    .setActionRows(
+                        ActionRow.of(
+                            SelectMenu.create("help")
+                                .setPlaceholder("Give me information on...")
+                                .addOption("Commands", "command", "View all available commands.", Emoji.fromCustom("slash", slashId, false))
+                                .addOption("Support", "support", "View support options.", Emoji.fromCustom("support", supportId, false))
+                                .build()),
+                        ActionRow.of(
+                            Button.primary("ticket", "Support ticket").withEmoji(Emoji.fromUnicode("U+1F3AB")), 
+                            Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false)),
+                            Button.link("http://lxbs.online/support", "lxbs.online/support").withEmoji(Emoji.fromCustom("support", supportId, false))))
                     .queue();
-                        
-                SelectMenu menu = SelectMenu.create("help")
-                    .setPlaceholder("Give me information on...")
-                    .addOption("Commands", "command", "View all available commands.", Emoji.fromCustom("slash", slashId, false))
-                    .addOption("Support", "support", "View support options.", Emoji.fromCustom("support", supportId, false))
-                    .build();
-
-                message.editMessageComponents(
-                    ActionRow.of(
-                        Button.primary("ticket", "Support ticket").withEmoji(Emoji.fromUnicode("U+1F3AB")), 
-                        Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false)),
-                        Button.link("http://lxbs.online/support", "lxbs.online/support").withEmoji(Emoji.fromCustom("support", supportId, false))),
-                    ActionRow.of(menu),
-                    ActionRow.of(
-                         Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false)))
-                    ).queue();
             }
         }
     }
