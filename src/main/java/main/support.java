@@ -200,13 +200,14 @@ public class support extends ListenerAdapter {
                             message.editMessageEmbeds(
                                 emb.setTitle(ticketId.toString())
                                     .setColor(0xff55ff)
-                                    .setAuthor("**Closed** \u2022 " + user.getAsMention())
+                                    .setAuthor("Closed \u2022 " + user.getAsMention())
                                     .addField("Topic", ticket.getTopic(), false)
                                     .addField("Message", ticket.getMessage(), false)
                                     .setFooter("Time opened " + ticket.getTimeSubmitted()
                                         + " \u2022 Time closed " + OffsetDateTime.now().format(dtf))
                                     .build())
                                 .queue();
+                            message.editMessageComponents().queue();
                             event.reply(
                                 "The ticket with the ID **" + ticketId
                                 + "** has been marked as closed\n" + OffsetDateTime.now().format(dtf))
