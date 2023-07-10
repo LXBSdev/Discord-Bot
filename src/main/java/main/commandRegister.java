@@ -46,6 +46,7 @@ public class commandRegister extends ListenerAdapter {
                 commandData.add(Commands.slash("colour", "The colour you want to be displayed as")
                                 .addOptions(colour));
                 commandData.add(Commands.context(Command.Type.USER, "Get user information"));
+                commandData.add(Commands.slash("socials", "View our social profiles"));
                 event.getGuild().updateCommands().addCommands(commandData).queue();
         }
 
@@ -79,6 +80,7 @@ public class commandRegister extends ListenerAdapter {
                 commandData.add(Commands.slash("colour", "The colour you want to be displayed as")
                                 .addOptions(colour));
                 commandData.add(Commands.context(Command.Type.USER, "Get user information"));
+                commandData.add(Commands.slash("socials", "View our social profiles"));
                 event.getGuild().updateCommands().addCommands(commandData).queue();
         }
 }
