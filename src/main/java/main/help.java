@@ -82,9 +82,7 @@ public class help extends ListenerAdapter {
                     ActionRow.of(
                          Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false)))
                     ).queue();
-            }
-
-            if (event.getValues().get(0).equals("support")) {
+            } else if (event.getValues().get(0).equals("support")) {
                 message.editMessageEmbeds(
                     emb.setTitle("Support? Sure.")
                         .setColor(0xff55ff)
