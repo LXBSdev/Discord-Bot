@@ -222,7 +222,7 @@ public class commands extends ListenerAdapter {
             Long githubId = Long.parseLong("763440516066574338");
 
             event.replyEmbeds(
-                emb.setTitle("Socials")
+                emb.setTitle("socials")
                     .setDescription("Here you can find the links to all our socials.")
                     .setColor(0xff55ff)
                     .addField("Youtube", "(www.youtube.com/@lxbsminecraftserver)[https://www.youtube.com/@lxbsminecraftserver]", false)
