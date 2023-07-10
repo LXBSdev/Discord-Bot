@@ -82,6 +82,8 @@ public class support extends ListenerAdapter {
                                             + " \u2022 Time closed "
                                             + OffsetDateTime.now().format(dtf));
                                     event.replyEmbeds(emb.build())
+                                        .addActionRow(
+                                            Button.primary("refresh", Emoji.fromUnicode("U+1F504")))
                                         .queue();
                                 } else {
                                     emb.setTitle(ticketId.toString())
@@ -91,7 +93,9 @@ public class support extends ListenerAdapter {
                                         .addField("Message", ticket.getMessage(), false)
                                         .setFooter("Ticket opened " + ticket.getTimeSubmitted());
                                     event.replyEmbeds(emb.build())
-                                        .addActionRow(Button.primary("close", "close ticket"))
+                                        .addActionRow(
+                                            Button.primary("refresh", Emoji.fromUnicode("U+1F504")),
+                                            Button.primary("close", "close ticket"))
                                         .queue();
                                 }
                             } else {
@@ -108,8 +112,11 @@ public class support extends ListenerAdapter {
                                 emb.addField(ticket.getTicketId().toString(), ticket.getTopic(), false);
                             }
                             emb.setTitle("Open tickets")
-                                    .setColor(0xff55ff);
-                            event.replyEmbeds(emb.build()).queue();
+                                .setColor(0xff55ff);
+                            event.replyEmbeds(emb.build())
+                                .addActionRow(
+                                    Button.primary("refresh", Emoji.fromUnicode("U+1F504")))
+                                .queue();
                         }
                     } catch (FileNotFoundException e) {
                         event.reply("There are no tickets avlaible").setEphemeral(true).queue();
@@ -232,6 +239,69 @@ public class support extends ListenerAdapter {
                 event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
             }
         }
+
+        if (event.getComponentId().equals("refresh")) {
+            Message message = event.getMessage();
+            ObjectMapper mapper = new ObjectMapper();
+            Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
+            EmbedBuilder emb = new EmbedBuilder();
+
+            if (message.getEmbeds().get(0).getTitle().equals("Open tickets")) {
+                try {
+                    map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {});
+                    ArrayList<Ticket> tickets = new ArrayList<>();
+                    for (Ticket value : map.values()) {
+                        if (value.getSolved() == false) {
+                            tickets.add(value);
+                        }
+                    }
+                    for (Ticket ticket : tickets) {
+                        emb.addField(ticket.getTicketId().toString(), ticket.getTopic(), false);
+                    }
+                    emb.setTitle("Open tickets")
+                        .setColor(0xff55ff);
+                    
+                    message.editMessageEmbeds(emb.build()).queue();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (message.getEmbeds().get(0).getFields().get(0).getName().equals("Topic")) {
+                Integer ticketId = Integer.parseInt(message.getEmbeds().get(0).getTitle());
+                try {
+                    map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {});
+                    Ticket ticket = map.get(ticketId);
+                    User user = event.getJDA().retrieveUserById(ticket.getUserId()).complete();
+                    if (ticket.getSolved() == true) {
+                        emb.setTitle(ticketId.toString())
+                            .setColor(0xff55ff)
+                            .setAuthor("Closed \u2022 " + user.getAsMention())
+                            .addField("Topic", ticket.getTopic(), false)
+                            .addField("Message", ticket.getMessage(), false)
+                            .setFooter("Time opened " + ticket.getTimeSubmitted()
+                                + " \u2022 Time closed "
+                                + OffsetDateTime.now().format(dtf));
+                        event.replyEmbeds(emb.build())
+                            .queue();
+                    } else {
+                        emb.setTitle(ticketId.toString())
+                            .setColor(0xff55ff)
+                            .setAuthor(user.getAsMention())
+                            .addField("Topic", ticket.getTopic(), false)
+                            .addField("Message", ticket.getMessage(), false)
+                            .setFooter("Ticket opened " + ticket.getTimeSubmitted());
+                        event.replyEmbeds(emb.build())
+                            .addActionRow(
+                                Button.primary("refresh", Emoji.fromUnicode("U+1F504")),
+                                Button.primary("close", "close ticket"))
+                            .queue();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override
@@ -304,7 +374,9 @@ public class support extends ListenerAdapter {
             event.replyEmbeds(embUser.build()).setEphemeral(true).queue();
 
             event.getGuild().getTextChannelById("1122870579809243196").sendMessageEmbeds(emb.build())
-                .setActionRow(Button.primary("close", "close ticket"))
+                .setActionRow(
+                    Button.primary("refresh", Emoji.fromUnicode("U+1F504")),
+                    Button.primary("close", "close ticket"))
                 .queue();
         }
     }
