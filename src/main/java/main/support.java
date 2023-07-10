@@ -263,24 +263,19 @@ public class support extends ListenerAdapter {
                     }
                     emb.setTitle("Open tickets")
                         .setColor(0xff55ff);
-                    
-                    message.editMessageEmbeds(emb.build()).queue();
-                    message.editMessageComponents(
-                        ActionRow.of(
-                            Button.secondary("refresh", Emoji.fromUnicode("U+1F504"))))
-                        .queue();
-                    event.reply("dont").setEphemeral(true).queue();
+
+                    event.deferEdit().setEmbeds(emb.build()).setActionRow(Button.secondary("refresh", Emoji.fromUnicode("U+1F504"))).queue();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } else if (message.getEmbeds().get(0).getFields().get(0).getName().equals("Topic")) {
+            } else {
                 Integer ticketId = Integer.parseInt(message.getEmbeds().get(0).getTitle());
                 try {
                     map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {});
                     Ticket ticket = map.get(ticketId);
                     User user = event.getJDA().retrieveUserById(ticket.getUserId()).complete();
                     if (ticket.isSolved() == true) {
-                        message.editMessageEmbeds(
+                        event.deferEdit().setEmbeds(
                             emb.setTitle(ticketId.toString())
                                 .setColor(0xff55ff)
                                 .setAuthor("Closed \u2022 " + user.getAsMention())
@@ -290,14 +285,9 @@ public class support extends ListenerAdapter {
                                     + " \u2022 Time closed "
                                     + OffsetDateTime.now().format(dtf))
                                 .build())
-                        .queue();
-                        message.editMessageComponents(
-                            ActionRow.of(
-                                Button.secondary("refresh", Emoji.fromUnicode("U+1F504"))))
-                        .queue();
-                        event.reply("dont").setEphemeral(true).queue();
+                        .setActionRow(Button.secondary("refresh", Emoji.fromUnicode("U+1F504"))).queue();
                     } else {
-                        message.editMessageEmbeds(
+                        event.deferEdit().setEmbeds(
                             emb.setTitle(ticketId.toString())
                                 .setColor(0xff55ff)
                                 .setAuthor(user.getAsMention())
@@ -305,13 +295,7 @@ public class support extends ListenerAdapter {
                                 .addField("Message", ticket.getMessage(), false)
                                 .setFooter("Ticket opened " + ticket.getTimeSubmitted())
                                 .build())
-                        .queue();
-                        message.editMessageComponents(
-                            ActionRow.of(
-                                Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
-                                Button.primary("close", "close ticket")))
-                        .queue();
-                        event.reply("dont").setEphemeral(true).queue();
+                        .setActionRow(Button.secondary("refresh", Emoji.fromUnicode("U+1F504")), Button.primary("close", "close ticket")).queue();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
