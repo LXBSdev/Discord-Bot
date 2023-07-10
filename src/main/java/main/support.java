@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -40,6 +41,8 @@ public class support extends ListenerAdapter {
     public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
         if (event.getName().equals("support")) {
             EmbedBuilder emb = new EmbedBuilder();
+            Long lxbsId = Long.parseLong("1118108459431374898");
+            Long supportId = Long.parseLong("1127962706499088424");
 
             emb.setTitle("Support? Sure.")
                 .setColor(0xff55ff)
@@ -48,7 +51,11 @@ public class support extends ListenerAdapter {
                 .addField("Website", "https://lxbs.online", true)
                 .setFooter("LXBS Support", "https://cdn.discordapp.com/attachments/837779743486378075/1122872440872247437/logo-magenta.png");
 
-            event.replyEmbeds(emb.build()).addActionRow(Button.primary("ticket", "Support ticket"), Button.link("http://lxbs.online", "lxbs.online"), Button.link("http://lxbs.online/support", "lxbs.online/support")).setEphemeral(true).queue();
+            event.replyEmbeds(emb.build()).addActionRow(
+                Button.primary("ticket", "Support ticket").withEmoji(Emoji.fromUnicode("U+1F3AB")), 
+                Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false)),
+                Button.link("http://lxbs.online/support", "lxbs.online/support").withEmoji(Emoji.fromCustom("support", supportId, false)))
+                .setEphemeral(true).queue();
         }
 
         if (event.getName().equals("ticket")) {
