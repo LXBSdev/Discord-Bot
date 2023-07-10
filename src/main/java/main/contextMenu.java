@@ -54,7 +54,7 @@ public class contextMenu extends ListenerAdapter {
             emb.setDescription(user.getName() + " joined on " + member.getTimeJoined().format(fmt));
             emb.setColor(member.getColor());
             emb.setThumbnail(user.getAvatarUrl());
-            emb.setAuthor("Information on " + user.getAsTag());
+            emb.setAuthor("Information on " + user.getAsMention().toString());
             emb.addField("Nickname: ", member.getNickname() == null ? "No Nickname" : member.getNickname(), false);
             emb.addField("Status: ", member.getOnlineStatus().toString(), false);
             emb.addField("Game: ", getActivities(member.getActivities()), false);
