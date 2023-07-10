@@ -29,9 +29,6 @@ public class welcome extends ListenerAdapter {
                     .queue();
             event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("1122511805982457866"))
                     .queue();
-        } else {
-            event.getGuild().addRoleToMember(event.getMember(), event.getGuild().getRoleById("1071550714372956241"))
-                    .queue();
         }
 
     }
