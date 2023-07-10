@@ -2,15 +2,13 @@ package main;
 
 import java.io.Serializable;
 
-import javax.annotation.Nonnull;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Ticket implements Serializable {
     private Boolean solved;
     private Integer ticketId;
-    private @Nonnull String userId;
+    private String userId;
     private String topic;
     private String message;
     private String timeSubmitted;
@@ -20,7 +18,7 @@ public class Ticket implements Serializable {
     public Ticket (
         @JsonProperty("solved") Boolean lsolved,
         @JsonProperty("ticketId") Integer lticketId,
-        @JsonProperty("userID") @Nonnull String luserId,
+        @JsonProperty("userID") String luserId,
         @JsonProperty("topic") String ltopic,
         @JsonProperty("message") String lmessage,
         @JsonProperty("timeSubmitted") String ltimeSubmitted,
@@ -50,7 +48,7 @@ public class Ticket implements Serializable {
         return ticketId;
     }
 
-    public @Nonnull String getUserId() {
+    public String getUserId() {
         return userId;
     }
 
