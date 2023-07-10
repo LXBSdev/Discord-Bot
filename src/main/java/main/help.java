@@ -45,39 +45,41 @@ public class help extends ListenerAdapter {
 
     @Override
     public void onSelectMenuInteraction(@Nonnull SelectMenuInteractionEvent event) {
-        if (event.getSelectMenu().getId().equals("command")) {
+        if (event.getSelectMenu().getId().equals("help")) {
             Message message = event.getMessage();
             EmbedBuilder emb = new EmbedBuilder();
+            Long slashId = Long.parseLong("1127968914748473405");
+            Long supportId = Long.parseLong("1127962706499088424");
+            Long lxbsId = Long.parseLong("1118108459431374898");
             if (event.getValues().get(0).equals("command")) {
-                    emb.setTitle("LXBS Commands")
-                        .setDescription("List of all available commands")
-                        .setColor(0xff55ff)
-                        .addField("</help:1125414321204236328>", "Get help", false)
-                        .addField("</support:1125414321204236336>", "Get support", false)
-                        .addField("</rules:1125414321204236330>", "Display server rules", false)
-                        .addField("</userinfo:1125414321204236331>", "Get info on a user", false)
-                        .addField("</website:1125414321204236329>", "Get the link to our Website", false)
-                        .addField("</ip:1125414321204236335>", "Get Minecraft Server IP", false)
-                        .addField("</pronouns:1125414321359421471>", "Select your pronouns", false)
-                        .addField("</colour:1125414321359421472>", "The colour you want to be displayed as", false)
-                        .setFooter("LXBS Help", "https://cdn.discordapp.com/attachments/837779743486378075/1122872440872247437/logo-magenta.png");
+                emb.setTitle("LXBS Commands")
+                    .setDescription("List of all available commands")
+                    .setColor(0xff55ff)
+                    .addField("</help:1125414321204236328>", "Get help", false)
+                    .addField("</support:1125414321204236336>", "Get support", false)
+                    .addField("</rules:1125414321204236330>", "Display server rules", false)
+                    .addField("</userinfo:1125414321204236331>", "Get info on a user", false)
+                    .addField("</website:1125414321204236329>", "Get the link to our Website", false)
+                    .addField("</ip:1125414321204236335>", "Get Minecraft Server IP", false)
+                    .addField("</pronouns:1125414321359421471>", "Select your pronouns", false)
+                    .addField("</colour:1125414321359421472>", "The colour you want to be displayed as", false)
+                    .setFooter("LXBS Help", "https://cdn.discordapp.com/attachments/837779743486378075/1122872440872247437/logo-magenta.png");
 
                 message.editMessageEmbeds(emb.build()).queue();
-                event.replyEmbeds(emb.build()).setEphemeral(true).queue();
+                event.reply("lol").setEphemeral(true).queue();
             }
-            
-            if (event.getSelectMenu().getId().equals("support")) {
-                Long slashId = Long.parseLong("1127968914748473405");
-                Long supportId = Long.parseLong("1127962706499088424");
-                Long lxbsId = Long.parseLong("1118108459431374898");
 
+            if (event.getValues().get(0).equals("support")) {
+                message.editMessageEmbeds(
                 emb.setTitle("Support? Sure.")
                     .setColor(0xff55ff)
                     .setDescription("Welcome to the support center.\nIf you have a problem or question you can submit a support Ticket.")
                     .addField("Email", "support@lxbs.online", true)
                     .addField("Website", "https://lxbs.online", true)
-                    .setFooter("LXBS Support", "https://cdn.discordapp.com/attachments/837779743486378075/1122872440872247437/logo-magenta.png");
-
+                    .setFooter("LXBS Support", "https://cdn.discordapp.com/attachments/837779743486378075/1122872440872247437/logo-magenta.png")
+                    .build())
+                    .queue();
+                        
                 SelectMenu menu = SelectMenu.create("help")
                     .setPlaceholder("Give me information on...")
                     .addOption("Commands", "command", "View all available commands.", Emoji.fromCustom("slash", slashId, false))
@@ -91,8 +93,9 @@ public class help extends ListenerAdapter {
                         Button.link("http://lxbs.online/support", "lxbs.online/support").withEmoji(Emoji.fromCustom("support", supportId, false))),
                     ActionRow.of(menu),
                     ActionRow.of(
-                        Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false)))
-                ).queue();
+                         Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false)))
+                    ).queue();
+                event.reply("lolol").setEphemeral(true).queue();
             }
         }
     }
