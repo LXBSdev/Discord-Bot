@@ -41,7 +41,7 @@ public class support extends ListenerAdapter {
         if (event.getName().equals("support")) {
             EmbedBuilder emb = new EmbedBuilder();
 
-            emb.setTitle("LXBS Support")
+            emb.setTitle("Support? Sure.")
                 .setColor(0xff55ff)
                 .setDescription("Welcome to the support center.\nIf you have a problem or question you can submit a support Ticket.")
                 .addField("Email", "support@lxbs.online", true)

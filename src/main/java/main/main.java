@@ -24,7 +24,7 @@ public class main {
         builder.setActivity(Activity.playing(status));
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES);
         builder.addEventListeners(new support(), new welcome(), new commands(), new contextMenu(),
-                new commandRegister());
+                new commandRegister(), new main());
         shardManager = builder.build();
     }
 
