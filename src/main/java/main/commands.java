@@ -50,8 +50,10 @@ public class commands extends ListenerAdapter {
         if (command.equals("website")) {
             EmbedBuilder emb = new EmbedBuilder();
 
-            emb.addField("Website", "You can find more Information on our [Website](https://lxbs.online)", false);
-
+            emb.setTitle("Website")
+                .setColor(0xff55ff)
+                .addField("Website", "You can find more Information on our [Website](https://lxbs.online)", false)
+                .setFooter("LXBS Website", "https://cdn.discordapp.com/attachments/837779743486378075/1122872440872247437/logo-magenta.png");
             event.replyEmbeds(emb.build()).addActionRow(Button.link("http://lxbs.online", "lxbs.online"))
                     .setEphemeral(true).queue();
         }
@@ -114,11 +116,9 @@ public class commands extends ListenerAdapter {
         }
 
         if (command.equals("ip")) {
-
             EmbedBuilder emb = new EmbedBuilder();
 
             emb.addField("IP", "You can find our Minecraft server at [lxbs.online](https://lxbs.online)", false);
-
             event.replyEmbeds(emb.build()).setEphemeral(true).queue();
         }
 
