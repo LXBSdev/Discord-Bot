@@ -287,6 +287,7 @@ public class support extends ListenerAdapter {
             Map<Integer, Ticket> tickets = new HashMap<Integer, Ticket>();
             Map<String, TicketId> ticketIdMap = new HashMap<String, TicketId>();
             EmbedBuilder emb = new EmbedBuilder();
+            EmbedBuilder embUser = new EmbedBuilder();
 
             try {
                 ticketIdMap = mapper.readValue(new File("ticketId.json"), new TypeReference<Map<String, TicketId>>() {});
@@ -327,22 +328,23 @@ public class support extends ListenerAdapter {
 
             emb.setTitle(ticketId.getTicketId().toString())
                 .setColor(0xff55ff)
-                .setAuthor(user.getAsMention())
+                .setAuthor(user.getName())
+                .addField("Topic", topic, false)
+                .addField("Message", message, false)
+                .setFooter("Ticket opened " + OffsetDateTime.now().format(dtf));
+            
+            embUser.setTitle("Ticket submitted")
+                .setColor(0xff55ff)
+                .setAuthor(user.getName())
+                .setDescription("Your support Ticket has been submitted. Keep your Ticket ID, a member of support might get back to you. You will also be asked for it if you have any further questions to your ticket.")
+                .addField("Ticket ID", ticketId.getTicketId().toString(), false)
                 .addField("Topic", topic, false)
                 .addField("Message", message, false)
                 .setFooter("Ticket opened " + OffsetDateTime.now().format(dtf));
 
-            user.openPrivateChannel().flatMap(channel -> channel.sendMessage(
-                    "Your Support Form has been submited. You'll be informed when your Form has been processed.\nYour Ticket has the ID **"
-                    + ticketId.getTicketId()
-                    + "**\n" + OffsetDateTime.now().format(dtf)))
-                    .queue();
+            user.openPrivateChannel().flatMap(channel -> channel.sendMessageEmbeds(embUser.build())).queue();
 
-            event.reply(
-                    "Your Support Form has been submited. You'll be informed when your Form has been processed.\nYour Ticket has the ID **"
-                            + ticketId.getTicketId() + "**.\nKeep this ID, a member of support might get back to you.\n"
-                            + OffsetDateTime.now().format(dtf))
-                    .setEphemeral(true).queue();
+            event.replyEmbeds(embUser.build()).setEphemeral(true).queue();
 
             event.getGuild().getTextChannelById("1122870579809243196").sendMessageEmbeds(emb.build())
                 .setActionRow(Button.primary("close", "close ticket"))
