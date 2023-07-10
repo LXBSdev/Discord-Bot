@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.*;
 import net.dv8tion.jda.api.entities.Message;
@@ -34,8 +35,6 @@ public class help extends ListenerAdapter {
                 .addField("Email", "support@lxbs.online", true)
                 .addField("Website", "[lxbs.online](https://lxbs.online)", true)
                 .setFooter("LXBS Support", "https://cdn.discordapp.com/attachments/837779743486378075/1122872440872247437/logo-magenta.png");
-
-            
 
             event.replyEmbeds(emb.build())
                 .addActionRow(menu)
@@ -66,25 +65,35 @@ public class help extends ListenerAdapter {
                 message.editMessageEmbeds(emb.build()).queue();
                 event.replyEmbeds(emb.build()).setEphemeral(true).queue();
             }
-        }
+            
+            if (event.getSelectMenu().getId().equals("support")) {
+                Long slashId = Long.parseLong("1127968914748473405");
+                Long supportId = Long.parseLong("1127962706499088424");
+                Long lxbsId = Long.parseLong("1118108459431374898");
 
-        if (event.getSelectMenu().getId().equals("support")) {
-            EmbedBuilder emb = new EmbedBuilder();
-            Long lxbsId = Long.parseLong("1118108459431374898");
-            Long supportId = Long.parseLong("1127962706499088424");
+                emb.setTitle("Support? Sure.")
+                    .setColor(0xff55ff)
+                    .setDescription("Welcome to the support center.\nIf you have a problem or question you can submit a support Ticket.")
+                    .addField("Email", "support@lxbs.online", true)
+                    .addField("Website", "https://lxbs.online", true)
+                    .setFooter("LXBS Support", "https://cdn.discordapp.com/attachments/837779743486378075/1122872440872247437/logo-magenta.png");
 
-            emb.setTitle("Support? Sure.")
-                .setColor(0xff55ff)
-                .setDescription("Welcome to the support center.\nIf you have a problem or question you can submit a support Ticket.")
-                .addField("Email", "support@lxbs.online", true)
-                .addField("Website", "https://lxbs.online", true)
-                .setFooter("LXBS Support", "https://cdn.discordapp.com/attachments/837779743486378075/1122872440872247437/logo-magenta.png");
+                SelectMenu menu = SelectMenu.create("help")
+                    .setPlaceholder("Give me information on...")
+                    .addOption("Commands", "command", "View all available commands.", Emoji.fromCustom("slash", slashId, false))
+                    .addOption("Support", "support", "View support options.", Emoji.fromCustom("support", supportId, false))
+                    .build();
 
-            event.replyEmbeds(emb.build()).addActionRow(
-                Button.primary("ticket", "Support ticket").withEmoji(Emoji.fromUnicode("U+1F3AB")), 
-                Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false)),
-                Button.link("http://lxbs.online/support", "lxbs.online/support").withEmoji(Emoji.fromCustom("support", supportId, false)))
-                .setEphemeral(true).queue();
+                message.editMessageComponents(
+                    ActionRow.of(
+                        Button.primary("ticket", "Support ticket").withEmoji(Emoji.fromUnicode("U+1F3AB")), 
+                        Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false)),
+                        Button.link("http://lxbs.online/support", "lxbs.online/support").withEmoji(Emoji.fromCustom("support", supportId, false))),
+                    ActionRow.of(menu),
+                    ActionRow.of(
+                        Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false)))
+                ).queue();
+            }
         }
     }
 }
