@@ -40,7 +40,7 @@ public class Ticket implements Serializable {
         timeClosed = ltimeClosed;
     }
 
-    public Boolean getSolved() {
+    public Boolean isSolved() {
         return solved;
     }
 

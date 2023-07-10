@@ -72,7 +72,7 @@ public class support extends ListenerAdapter {
                                 Ticket ticket = map.get(ticketId);
                                 String userId = ticket.getUserId();
                                 User user = event.getJDA().retrieveUserById(userId).complete();
-                                if (ticket.getSolved() == true) {
+                                if (ticket.isSolved() == true) {
                                     emb.setTitle(ticketId.toString())
                                         .setColor(0xff55ff)
                                         .setAuthor("Closed \u2022 " + user.getAsMention())
@@ -104,7 +104,7 @@ public class support extends ListenerAdapter {
                         } else {
                             ArrayList<Ticket> tickets = new ArrayList<>();
                             for (Ticket value : map.values()) {
-                                if (value.getSolved() == false) {
+                                if (value.isSolved() == false) {
                                     tickets.add(value);
                                 }
                             }
@@ -186,7 +186,7 @@ public class support extends ListenerAdapter {
                     map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {});
                     if (map.containsKey(ticketId)) {
                         Ticket ticket = map.get(ticketId);
-                        if (ticket.getSolved() == true) {
+                        if (ticket.isSolved() == true) {
                             event.reply("This ticket is already closed.").setEphemeral(true).queue();
                         } else {
                             ticket.ticketSetSolvedTrue();
@@ -254,7 +254,7 @@ public class support extends ListenerAdapter {
                     map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {});
                     ArrayList<Ticket> tickets = new ArrayList<>();
                     for (Ticket value : map.values()) {
-                        if (value.getSolved() == false) {
+                        if (value.isSolved() == false) {
                             tickets.add(value);
                         }
                     }
@@ -279,7 +279,7 @@ public class support extends ListenerAdapter {
                     map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {});
                     Ticket ticket = map.get(ticketId);
                     User user = event.getJDA().retrieveUserById(ticket.getUserId()).complete();
-                    if (ticket.getSolved() == true) {
+                    if (ticket.isSolved() == true) {
                         message.editMessageEmbeds(
                             emb.setTitle(ticketId.toString())
                                 .setColor(0xff55ff)
