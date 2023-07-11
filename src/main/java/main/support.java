@@ -53,8 +53,8 @@ public class support extends ListenerAdapter {
 
             event.replyEmbeds(emb.build()).addActionRow(
                 Button.primary("ticket", "Support ticket").withEmoji(Emoji.fromUnicode("U+1F3AB")), 
-                Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false)),
-                Button.link("http://lxbs.online/support", "lxbs.online/support").withEmoji(Emoji.fromCustom("support", supportId, false)))
+                Button.link("http://lxbs.online/support", "lxbs.online/support").withEmoji(Emoji.fromCustom("support", supportId, false)),
+                Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false)))
                 .setEphemeral(true).queue();
         }
 
@@ -75,7 +75,7 @@ public class support extends ListenerAdapter {
                                 if (ticket.isSolved() == true) {
                                     emb.setTitle(ticketId.toString())
                                         .setColor(0xff55ff)
-                                        .setAuthor("Closed \u2022 " + user.getAsMention())
+                                        .setAuthor("Closed \u2022 " + user.getAsTag())
                                         .addField("Topic", ticket.getTopic(), false)
                                         .addField("Message", ticket.getMessage(), false)
                                         .setFooter("Time opened " + ticket.getTimeSubmitted()
@@ -89,7 +89,7 @@ public class support extends ListenerAdapter {
                                 } else {
                                     emb.setTitle(ticketId.toString())
                                         .setColor(0xff55ff)
-                                        .setAuthor(user.getAsMention())
+                                        .setAuthor(user.getAsTag())
                                         .addField("Topic", ticket.getTopic(), false)
                                         .addField("Message", ticket.getMessage(), false)
                                         .setFooter("Ticket opened " + ticket.getTimeSubmitted());
@@ -114,7 +114,8 @@ public class support extends ListenerAdapter {
                                 emb.addField(ticket.getTicketId().toString(), ticket.getTopic(), false);
                             }
                             emb.setTitle("Open tickets")
-                                .setColor(0xff55ff);
+                                .setColor(0xff55ff)
+                                .setTimestamp(OffsetDateTime.now());
                             event.replyEmbeds(emb.build())
                                 .addActionRow(
                                     Button.secondary("refresh", Emoji.fromUnicode("U+1F504")))
@@ -170,79 +171,65 @@ public class support extends ListenerAdapter {
 
         if (event.getComponentId().equals("close")) {
             Message message = event.getMessage();
-            Integer ticketId = null;
-            if (message.getEmbeds().size() > 0) {
-                if (message.getEmbeds().get(0) != null) {
-                    ticketId = Integer.parseInt(message.getEmbeds().get(0).getTitle());
-                } else {
-                    ticketId = null;
-                }
-            } else {
-                ticketId = null;
-            }
-            if (ticketId != null) {
-                EmbedBuilder emb = new EmbedBuilder();
-                ObjectMapper mapper = new ObjectMapper();
-                Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
-                try {
-                    map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {});
-                    if (map.containsKey(ticketId)) {
-                        Ticket ticket = map.get(ticketId);
-                        if (ticket.isSolved() == true) {
-                            event.reply("This ticket is already closed.").setEphemeral(true).queue();
-                        } else {
-                            ticket.ticketSetSolvedTrue();
-                            ticket.ticketSetSolvedTime(OffsetDateTime.now().format(dtf));
-                            map.put(ticketId, ticket);
-                            String userId = ticket.getUserId();
-                            User user = event.getJDA().retrieveUserById(userId).complete();
-                            EmbedBuilder embUser = new EmbedBuilder();
-
-                            embUser.setTitle("Ticket solved")
-                                .setColor(0xff55ff)
-                                .setDescription("Your support Ticket has been solved. The problem should be fixed now, if that shouldn't be the case please contact a member of support.")
-                                .addField("Ticket ID", ticket.getTicketId().toString(), false)
-                                .setFooter("Time opened " + ticket.getTimeSubmitted()
-                                        + " \u2022 Time closed " + OffsetDateTime.now().format(dtf));
-
-                            user.openPrivateChannel().flatMap(channel -> channel.sendMessageEmbeds(embUser.build())).queue();
-                            message.editMessageEmbeds(
-                                emb.setTitle(ticketId.toString())
-                                    .setColor(0xff55ff)
-                                    .setAuthor("Closed \u2022 " + user.getAsMention())
-                                    .addField("Topic", ticket.getTopic(), false)
-                                    .addField("Message", ticket.getMessage(), false)
-                                    .setFooter("Time opened " + ticket.getTimeSubmitted()
-                                        + " \u2022 Time closed " + OffsetDateTime.now().format(dtf))
-                                    .build())
-                                .queue();
-                            message.editMessageComponents(
-                                    ActionRow.of(
-                                        Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
-                                        Button.primary("reply", "reply")))
-                                .queue();
-                            event.reply(
-                                "The ticket with the ID **" + ticketId
-                                + "** has been marked as closed\n" + OffsetDateTime.now().format(dtf))
-                                .setEphemeral(true).queue();
-                        }
+            Integer ticketId = Integer.parseInt(message.getEmbeds().get(0).getTitle());
+            EmbedBuilder emb = new EmbedBuilder();
+            ObjectMapper mapper = new ObjectMapper();
+            Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
+            try {
+                map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {});
+                if (map.containsKey(ticketId)) {
+                    Ticket ticket = map.get(ticketId);
+                    if (ticket.isSolved() == true) {
+                        event.reply("This ticket is already closed.").setEphemeral(true).queue();
                     } else {
-                        event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
+                        ticket.ticketSetSolvedTrue();
+                        ticket.ticketSetSolvedTime(OffsetDateTime.now().format(dtf));
+                        map.put(ticketId, ticket);
+                        String userId = ticket.getUserId();
+                        User user = event.getJDA().retrieveUserById(userId).complete();
+                         EmbedBuilder embUser = new EmbedBuilder();
+
+                         embUser.setTitle("Ticket solved")
+                            .setColor(0xff55ff)
+                            .setDescription("Your support Ticket has been solved. The problem should be fixed now, if that shouldn't be the case please contact a member of support.")
+                            .addField("Ticket ID", ticket.getTicketId().toString(), false)
+                            .setFooter("Time opened " + ticket.getTimeSubmitted()
+                                + " \u2022 Time closed " + OffsetDateTime.now().format(dtf));
+
+                        user.openPrivateChannel().flatMap(channel -> channel.sendMessageEmbeds(embUser.build())).queue();
+                        message.editMessageEmbeds(
+                            emb.setTitle(ticketId.toString())
+                                .setColor(0xff55ff)
+                                .setAuthor("Closed \u2022 " + user.getAsTag())
+                                .addField("Topic", ticket.getTopic(), false)
+                                .addField("Message", ticket.getMessage(), false)
+                                .setFooter("Time opened " + ticket.getTimeSubmitted()
+                                    + " \u2022 Time closed " + OffsetDateTime.now().format(dtf))
+                                .build())
+                            .queue();
+                        message.editMessageComponents(
+                            ActionRow.of(
+                                Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
+                                Button.primary("reply", "reply")))
+                        .queue();
+                        event.reply(
+                            "The ticket with the ID **" + ticketId
+                            + "** has been marked as closed\n" + OffsetDateTime.now().format(dtf))
+                            .setEphemeral(true).queue();
                     }
-                } catch (MismatchedInputException e) {
+                } else {
                     event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
-
-                try {
-                    mapper.writeValue(new File("tickets.json"), map);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            } else {
+            } catch (MismatchedInputException e) {
                 event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                mapper.writeValue(new File("tickets.json"), map);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
@@ -265,7 +252,8 @@ public class support extends ListenerAdapter {
                         emb.addField(ticket.getTicketId().toString(), ticket.getTopic(), false);
                     }
                     emb.setTitle("Open tickets")
-                        .setColor(0xff55ff);
+                        .setColor(0xff55ff)
+                        .setTimestamp(OffsetDateTime.now());
 
                     event.deferEdit().setEmbeds(emb.build()).setActionRow(Button.secondary("refresh", Emoji.fromUnicode("U+1F504"))).queue();
                 } catch (IOException e) {
@@ -281,22 +269,24 @@ public class support extends ListenerAdapter {
                         event.deferEdit().setEmbeds(
                             emb.setTitle(ticketId.toString())
                                 .setColor(0xff55ff)
-                                .setAuthor("Closed \u2022 " + user.getAsMention())
+                                .setAuthor("Closed \u2022 " + user.getAsTag())
                                 .addField("Topic", ticket.getTopic(), false)
                                 .addField("Message", ticket.getMessage(), false)
                                 .setFooter("Time opened " + ticket.getTimeSubmitted()
                                     + " \u2022 Time closed "
-                                    + OffsetDateTime.now().format(dtf))
+                                    + ticket.getTimeClosed())
+                                .setTimestamp(OffsetDateTime.now())
                                 .build())
                         .setActionRow(Button.secondary("refresh", Emoji.fromUnicode("U+1F504")), Button.primary("reply", "reply")).queue();
                     } else {
                         event.deferEdit().setEmbeds(
                             emb.setTitle(ticketId.toString())
                                 .setColor(0xff55ff)
-                                .setAuthor(user.getAsMention())
+                                .setAuthor(user.getAsTag())
                                 .addField("Topic", ticket.getTopic(), false)
                                 .addField("Message", ticket.getMessage(), false)
                                 .setFooter("Ticket opened " + ticket.getTimeSubmitted())
+                                .setTimestamp(OffsetDateTime.now())
                                 .build())
                         .setActionRow(Button.secondary("refresh", Emoji.fromUnicode("U+1F504")), Button.primary("close", "close ticket"), Button.primary("reply", "reply")).queue();
                     }
@@ -379,7 +369,7 @@ public class support extends ListenerAdapter {
 
             emb.setTitle(ticketId.getTicketId().toString())
                 .setColor(0xff55ff)
-                .setAuthor(user.getName())
+                .setAuthor(user.getAsTag())
                 .addField("Topic", topic, false)
                 .addField("Message", message, false)
                 .setFooter("Ticket opened " + OffsetDateTime.now().format(dtf));
@@ -405,21 +395,11 @@ public class support extends ListenerAdapter {
         }
 
         if (event.getModalId().equals("reply")) {
+            Integer ticketId;
             ObjectMapper mapper = new ObjectMapper();
             Map<Integer, TicketReply> ticketsReplies = new HashMap<Integer, TicketReply>();
             Map<Integer, TicketReply> ticketReplyIdMap = new HashMap<Integer, TicketReply>();
             Integer ticketReplyId;
-
-            try {
-                ticketReplyIdMap = mapper.readValue(new File(ticketReplyId + ".json"), new TypeReference<Map<String, TicketReplyId>>() {});
-                ticketId.setTicketId(ticketIdMap.get("Ticket ID").getTicketId() + 1);
-                ticketIdMap.put("Ticket ID", ticketId);
-            } catch (FileNotFoundException e) {
-                ticketId.setTicketId(1);
-                ticketIdMap.put("Ticket ID", ticketId);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 }
