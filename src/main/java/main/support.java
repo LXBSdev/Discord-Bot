@@ -142,6 +142,78 @@ public class support extends ListenerAdapter {
                 } else {
                     event.reply("You do not have the necessary permissions for this action").setEphemeral(true).queue();
                 }
+            } else {
+                ObjectMapper mapper = new ObjectMapper();
+                        Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
+                        EmbedBuilder emb = new EmbedBuilder();
+                        try {
+                            map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {});
+                            if (event.getOption("ticket-id") != null) {
+                                Integer ticketId = event.getOption("ticket-id").getAsInt();
+                                if (map.containsKey(ticketId)) {
+                                    Ticket ticket = map.get(ticketId);
+                                    String userId = ticket.getUserId();
+                                    User user = event.getJDA().retrieveUserById(userId).complete();
+                                    if (ticket.isSolved() == true) {
+                                        emb.setTitle(ticketId + " \u2022 Closed")
+                                            .setColor(0xff55ff)
+                                            .setDescription(user.getAsMention())
+                                            .addField("Topic", ticket.getTopic(), false)
+                                            .addField("Message", ticket.getMessage(), false)
+                                            .setFooter("Time opened " + ticket.getTimeSubmitted()
+                                                + " \u2022 Time closed "
+                                                + OffsetDateTime.now().format(dtf));
+                                        event.replyEmbeds(emb.build())
+                                            .addActionRow(
+                                                Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
+                                                Button.primary("reply", "reply"))
+                                            .queue();
+                                    } else {
+                                        emb.setTitle(ticketId.toString())
+                                            .setColor(0xff55ff)
+                                            .setDescription(user.getAsMention())
+                                            .addField(ticket.getTopic(), ticket.getMessage(), false)
+                                            .setFooter("Ticket opened " + ticket.getTimeSubmitted());
+                                        event.replyEmbeds(emb.build())
+                                            .addActionRow(
+                                                Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
+                                                Button.danger("close", "close ticket"),
+                                                Button.primary("reply", "reply"))
+                                            .queue();
+                                    }
+                                } else {
+                                    event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
+                                }
+                            } else {
+                                ArrayList<Ticket> tickets = new ArrayList<>();
+                                for (Ticket value : map.values()) {
+                                    if (value.isSolved() == false) {
+                                        tickets.add(value);
+                                    }
+                                }
+                                for (Ticket ticket : tickets) {
+                                    emb.addField(ticket.getTicketId().toString(), ticket.getTopic(), false);
+                                }
+                                emb.setTitle("Open tickets")
+                                    .setColor(0xff55ff)
+                                    .setTimestamp(OffsetDateTime.now());
+                                event.replyEmbeds(emb.build())
+                                    .addActionRow(
+                                        Button.secondary("refresh", Emoji.fromUnicode("U+1F504")))
+                                    .queue();
+                            }
+                        } catch (FileNotFoundException e) {
+                            event.reply("There are no tickets avlaible").setEphemeral(true).queue();
+                            e.printStackTrace();
+                        } catch (ClassCastException e) {
+                            event.reply("There are no tickets avlaible").setEphemeral(true).queue();
+                            e.printStackTrace();
+                        } catch (InvalidDefinitionException e) {
+                            event.reply("There are no tickets avlaible").setEphemeral(true).queue();
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
             }
         }
     }
