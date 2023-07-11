@@ -288,6 +288,8 @@ public class support extends ListenerAdapter {
                                 .build())
                         .setActionRow(Button.secondary("refresh", Emoji.fromUnicode("U+1F504")), Button.danger("close", "close ticket"), Button.primary("reply", "reply")).queue();
                     }
+                } catch (NullPointerException e) {
+                    event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -403,10 +405,6 @@ public class support extends ListenerAdapter {
         }
 
         if (event.getModalId().equals("reply")) {
-            Modal modal;
-            System.out.println(modal);
-            Integer ticketId = Integer.parseInt(modal.getAsString());
-            System.out.println(ticketId);
             ObjectMapper mapper = new ObjectMapper();
             Map<Integer, TicketReply> ticketsReplies = new HashMap<Integer, TicketReply>();
             Map<Integer, TicketReply> ticketReplyIdMap = new HashMap<Integer, TicketReply>();
