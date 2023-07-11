@@ -28,6 +28,8 @@ import net.dv8tion.jda.api.interactions.components.Modal;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
+import net.dv8tion.jda.api.interactions.modals.ModalMapping;
+import net.dv8tion.jda.internal.interactions.component.ModalImpl;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 
@@ -90,13 +92,12 @@ public class support extends ListenerAdapter {
                                     emb.setTitle(ticketId.toString())
                                         .setColor(0xff55ff)
                                         .setDescription(user.getAsMention())
-                                        .addField("Topic", ticket.getTopic(), false)
-                                        .addField("Message", ticket.getMessage(), false)
+                                        .addField(ticket.getTopic(), ticket.getMessage(), false)
                                         .setFooter("Ticket opened " + ticket.getTimeSubmitted());
                                     event.replyEmbeds(emb.build())
                                         .addActionRow(
                                             Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
-                                            Button.primary("close", "close ticket"),
+                                            Button.danger("close", "close ticket"),
                                             Button.primary("reply", "reply"))
                                         .queue();
                                 }
@@ -201,8 +202,7 @@ public class support extends ListenerAdapter {
                             emb.setTitle(ticketId + " \u2022 Closed")
                                 .setColor(0xff55ff)
                                 .setDescription(user.getAsMention())
-                                .addField("Topic", ticket.getTopic(), false)
-                                .addField("Message", ticket.getMessage(), false)
+                                .addField(ticket.getTopic(), ticket.getMessage(), false)
                                 .setFooter("Time opened " + ticket.getTimeSubmitted()
                                     + " \u2022 Time closed " + OffsetDateTime.now().format(dtf))
                                 .build())
@@ -270,8 +270,7 @@ public class support extends ListenerAdapter {
                             emb.setTitle(ticketId + " \u2022 Closed")
                                 .setColor(0xff55ff)
                                 .setDescription(user.getAsMention())
-                                .addField("Topic", ticket.getTopic(), false)
-                                .addField("Message", ticket.getMessage(), false)
+                                .addField(ticket.getTopic(), ticket.getMessage(), false)
                                 .setFooter("Time opened " + ticket.getTimeSubmitted()
                                     + " \u2022 Time closed "
                                     + ticket.getTimeClosed())
@@ -283,12 +282,11 @@ public class support extends ListenerAdapter {
                             emb.setTitle(ticketId.toString())
                                 .setColor(0xff55ff)
                                 .setDescription(user.getAsMention())
-                                .addField("Topic", ticket.getTopic(), false)
-                                .addField("Message", ticket.getMessage(), false)
+                                .addField(ticket.getTopic(), ticket.getMessage(), false)
                                 .setFooter("Ticket opened " + ticket.getTimeSubmitted())
                                 .setTimestamp(OffsetDateTime.now())
                                 .build())
-                        .setActionRow(Button.secondary("refresh", Emoji.fromUnicode("U+1F504")), Button.primary("close", "close ticket"), Button.primary("reply", "reply")).queue();
+                        .setActionRow(Button.secondary("refresh", Emoji.fromUnicode("U+1F504")), Button.danger("close", "close ticket"), Button.primary("reply", "reply")).queue();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -297,19 +295,30 @@ public class support extends ListenerAdapter {
         }
 
         if (event.getComponentId().equals("reply")) {
+            ObjectMapper mapper = new ObjectMapper();
+            Map<Integer, Ticket> tickets = new HashMap<Integer, Ticket>();
             Message messageOG = event.getMessage();
-            String user = messageOG.getEmbeds().get(0).getAuthor().getName();
             String topic = messageOG.getEmbeds().get(0).getFields().get(0).getValue();
-            String ticketId = messageOG.getEmbeds().get(0).getTitle();
+            Integer ticketId = Integer.parseInt((messageOG.getEmbeds().get(0).getTitle().split(" "))[0]);
             
-            TextInput message = TextInput.create("message", ticketId + " \u2022 Topic: " + topic + " \u2022 Your Message:", TextInputStyle.PARAGRAPH)
+            try {
+                tickets = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Ticket ticket =  tickets.get(ticketId);
+            User user = event.getJDA().retrieveUserById(ticket.getUserId()).complete();
+
+            TextInput message = TextInput.create("message", "Reply to " + user.getName(), TextInputStyle.PARAGRAPH)
                     .setPlaceholder("Your message")
                     .setMinLength(1)
                     .setMaxLength(1000)
                     .setRequired(true)
                     .build();
 
-            Modal modal = Modal.create("ticket", "Reply to " + user)
+            Modal modal = Modal.create("reply", ticketId.toString())
                     .addActionRows(ActionRow.of(message))
                     .build();
 
@@ -369,9 +378,8 @@ public class support extends ListenerAdapter {
 
             emb.setTitle(ticketId.getTicketId().toString())
                 .setColor(0xff55ff)
-                .setAuthor(user.getAsTag())
-                .addField("Topic", topic, false)
-                .addField("Message", message, false)
+                .setDescription(user.getAsMention())
+                .addField(topic, message, false)
                 .setFooter("Ticket opened " + OffsetDateTime.now().format(dtf));
             
             embUser.setTitle("Ticket submitted")
@@ -389,14 +397,16 @@ public class support extends ListenerAdapter {
             event.getGuild().getTextChannelById("1122870579809243196").sendMessageEmbeds(emb.build())
                 .setActionRow(
                     Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
-                    Button.primary("close", "close ticket"),
+                    Button.danger("close", "close ticket"),
                     Button.primary("reply", "reply"))
                 .queue();
         }
 
         if (event.getModalId().equals("reply")) {
-            Integer ticketId;
-            event.getModalId().
+            Modal modal;
+            System.out.println(modal);
+            Integer ticketId = Integer.parseInt(modal.getAsString());
+            System.out.println(ticketId);
             ObjectMapper mapper = new ObjectMapper();
             Map<Integer, TicketReply> ticketsReplies = new HashMap<Integer, TicketReply>();
             Map<Integer, TicketReply> ticketReplyIdMap = new HashMap<Integer, TicketReply>();
