@@ -9,8 +9,8 @@ public class TicketId implements Serializable {
     private Integer ticketId;
 
     @JsonCreator
-    public TicketId (@JsonProperty("ticketId") Integer lticketId) {
-        ticketId = lticketId;
+    public TicketId (@JsonProperty("ticketId") Integer ticketId) {
+        this.ticketId = ticketId;
     }
 
     public void setTicketId(Integer lticketId) {

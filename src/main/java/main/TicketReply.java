@@ -14,17 +14,17 @@ public class TicketReply implements Serializable{
 
     @JsonCreator
     public TicketReply (
-        @JsonProperty("replyId") Integer lreplyId,
-        @JsonProperty("userId") String luserId,
-        @JsonProperty("topic") String ltopic,
-        @JsonProperty("message") String lmessage,
-        @JsonProperty("timeSubmitted") String ltimeSubmitted
+        @JsonProperty("replyId") Integer replyId,
+        @JsonProperty("userId") String userId,
+        @JsonProperty("topic") String topic,
+        @JsonProperty("message") String message,
+        @JsonProperty("timeSubmitted") String timeSubmitted
     ) {
-        replyId = lreplyId;
-        userId = luserId;
-        topic = ltopic;
-        message = lmessage;
-        timeSubmitted = ltimeSubmitted;
+        this.replyId = replyId;
+        this.userId = userId;
+        this.topic = topic;
+        this.message = message;
+        this.timeSubmitted = timeSubmitted;
 
     }
 

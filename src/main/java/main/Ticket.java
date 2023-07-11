@@ -16,20 +16,20 @@ public class Ticket implements Serializable {
 
     @JsonCreator
     public Ticket (
-        @JsonProperty("solved") Boolean lsolved,
-        @JsonProperty("ticketId") Integer lticketId,
-        @JsonProperty("userID") String luserId,
-        @JsonProperty("topic") String ltopic,
-        @JsonProperty("message") String lmessage,
-        @JsonProperty("timeSubmitted") String ltimeSubmitted,
-        @JsonProperty("timeClosed") String ltimeClosed) {
-            solved = lsolved;
-            ticketId = lticketId;
-            userId = luserId;
-            topic = ltopic;
-            message = lmessage;
-            timeSubmitted = ltimeSubmitted;
-            timeClosed = ltimeClosed;
+        @JsonProperty("solved") Boolean solved,
+        @JsonProperty("ticketId") Integer ticketId,
+        @JsonProperty("userID") String userId,
+        @JsonProperty("topic") String topic,
+        @JsonProperty("message") String message,
+        @JsonProperty("timeSubmitted") String timeSubmitted,
+        @JsonProperty("timeClosed") String timeClosed) {
+            this.solved = solved;
+            this.ticketId = ticketId;
+            this.userId = userId;
+            this.topic = topic;
+            this.message = message;
+            this.timeSubmitted = timeSubmitted;
+            this.timeClosed = timeClosed;
     }
 
     void ticketSetSolvedTrue() {
