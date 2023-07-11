@@ -73,9 +73,8 @@ public class support extends ListenerAdapter {
                                 String userId = ticket.getUserId();
                                 User user = event.getJDA().retrieveUserById(userId).complete();
                                 if (ticket.isSolved() == true) {
-                                    emb.setTitle(ticketId.toString())
+                                    emb.setTitle(ticketId + " \u2022 Closed")
                                         .setColor(0xff55ff)
-                                        .setAuthor("Closed")
                                         .setDescription(user.getAsMention())
                                         .addField("Topic", ticket.getTopic(), false)
                                         .addField("Message", ticket.getMessage(), false)
@@ -172,7 +171,7 @@ public class support extends ListenerAdapter {
 
         if (event.getComponentId().equals("close")) {
             Message message = event.getMessage();
-            Integer ticketId = Integer.parseInt(message.getEmbeds().get(0).getTitle());
+            Integer ticketId = Integer.parseInt((message.getEmbeds().get(0).getTitle().split(" "))[0]);
             EmbedBuilder emb = new EmbedBuilder();
             ObjectMapper mapper = new ObjectMapper();
             Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
@@ -199,9 +198,8 @@ public class support extends ListenerAdapter {
 
                         user.openPrivateChannel().flatMap(channel -> channel.sendMessageEmbeds(embUser.build())).queue();
                         message.editMessageEmbeds(
-                            emb.setTitle(ticketId.toString())
+                            emb.setTitle(ticketId + " \u2022 Closed")
                                 .setColor(0xff55ff)
-                                .setAuthor("Closed")
                                 .setDescription(user.getAsMention())
                                 .addField("Topic", ticket.getTopic(), false)
                                 .addField("Message", ticket.getMessage(), false)
@@ -262,16 +260,15 @@ public class support extends ListenerAdapter {
                     e.printStackTrace();
                 }
             } else {
-                Integer ticketId = Integer.parseInt(message.getEmbeds().get(0).getTitle());
+                Integer ticketId = Integer.parseInt((message.getEmbeds().get(0).getTitle().split(" "))[0]);
                 try {
                     map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {});
                     Ticket ticket = map.get(ticketId);
                     User user = event.getJDA().retrieveUserById(ticket.getUserId()).complete();
                     if (ticket.isSolved() == true) {
                         event.deferEdit().setEmbeds(
-                            emb.setTitle(ticketId.toString())
+                            emb.setTitle(ticketId + " \u2022 Closed")
                                 .setColor(0xff55ff)
-                                .setAuthor("Closed")
                                 .setDescription(user.getAsMention())
                                 .addField("Topic", ticket.getTopic(), false)
                                 .addField("Message", ticket.getMessage(), false)
