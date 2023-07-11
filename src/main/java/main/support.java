@@ -28,8 +28,6 @@ import net.dv8tion.jda.api.interactions.components.Modal;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
-import net.dv8tion.jda.api.interactions.modals.ModalMapping;
-import net.dv8tion.jda.internal.interactions.component.ModalImpl;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 
@@ -61,87 +59,89 @@ public class support extends ListenerAdapter {
         }
 
         if (event.getName().equals("ticket")) {
-            if (event.getMember().getRoles().toString().contains("Admin")) {
-                if (event.getChannel().getId().equals("1122870579809243196") | event.getChannel().getId().equals("1059792277452623872") | event.getChannel().getId().equals("1062121062067863602") | event.getChannel().getId().equals("1125757185113198645")) {
-                    ObjectMapper mapper = new ObjectMapper();
-                    Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
-                    EmbedBuilder emb = new EmbedBuilder();
-                    try {
-                        map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {});
-                        if (event.getOption("ticket-id") != null) {
-                            Integer ticketId = event.getOption("ticket-id").getAsInt();
-                            if (map.containsKey(ticketId)) {
-                                Ticket ticket = map.get(ticketId);
-                                String userId = ticket.getUserId();
-                                User user = event.getJDA().retrieveUserById(userId).complete();
-                                if (ticket.isSolved() == true) {
-                                    emb.setTitle(ticketId + " \u2022 Closed")
-                                        .setColor(0xff55ff)
-                                        .setDescription(user.getAsMention())
-                                        .addField("Topic", ticket.getTopic(), false)
-                                        .addField("Message", ticket.getMessage(), false)
-                                        .setFooter("Time opened " + ticket.getTimeSubmitted()
-                                            + " \u2022 Time closed "
-                                            + OffsetDateTime.now().format(dtf));
-                                    event.replyEmbeds(emb.build())
-                                        .addActionRow(
-                                            Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
-                                            Button.primary("reply", "reply"))
-                                        .queue();
+            if (!event.getGuild().getId().equals("1057684150527733880")) {
+                if (event.getMember().getRoles().toString().contains("Admin")) {
+                    if (event.getChannel().getId().equals("1122870579809243196") | event.getChannel().getId().equals("1059792277452623872") | event.getChannel().getId().equals("1062121062067863602") | event.getChannel().getId().equals("1125757185113198645")) {
+                        ObjectMapper mapper = new ObjectMapper();
+                        Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
+                        EmbedBuilder emb = new EmbedBuilder();
+                        try {
+                            map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {});
+                            if (event.getOption("ticket-id") != null) {
+                                Integer ticketId = event.getOption("ticket-id").getAsInt();
+                                if (map.containsKey(ticketId)) {
+                                    Ticket ticket = map.get(ticketId);
+                                    String userId = ticket.getUserId();
+                                    User user = event.getJDA().retrieveUserById(userId).complete();
+                                    if (ticket.isSolved() == true) {
+                                        emb.setTitle(ticketId + " \u2022 Closed")
+                                            .setColor(0xff55ff)
+                                            .setDescription(user.getAsMention())
+                                            .addField("Topic", ticket.getTopic(), false)
+                                            .addField("Message", ticket.getMessage(), false)
+                                            .setFooter("Time opened " + ticket.getTimeSubmitted()
+                                                + " \u2022 Time closed "
+                                                + OffsetDateTime.now().format(dtf));
+                                        event.replyEmbeds(emb.build())
+                                            .addActionRow(
+                                                Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
+                                                Button.primary("reply", "reply"))
+                                            .queue();
+                                    } else {
+                                        emb.setTitle(ticketId.toString())
+                                            .setColor(0xff55ff)
+                                            .setDescription(user.getAsMention())
+                                            .addField(ticket.getTopic(), ticket.getMessage(), false)
+                                            .setFooter("Ticket opened " + ticket.getTimeSubmitted());
+                                        event.replyEmbeds(emb.build())
+                                            .addActionRow(
+                                                Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
+                                                Button.danger("close", "close ticket"),
+                                                Button.primary("reply", "reply"))
+                                            .queue();
+                                    }
                                 } else {
-                                    emb.setTitle(ticketId.toString())
-                                        .setColor(0xff55ff)
-                                        .setDescription(user.getAsMention())
-                                        .addField(ticket.getTopic(), ticket.getMessage(), false)
-                                        .setFooter("Ticket opened " + ticket.getTimeSubmitted());
-                                    event.replyEmbeds(emb.build())
-                                        .addActionRow(
-                                            Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
-                                            Button.danger("close", "close ticket"),
-                                            Button.primary("reply", "reply"))
-                                        .queue();
+                                    event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
                                 }
                             } else {
-                                event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
-                            }
-                        } else {
-                            ArrayList<Ticket> tickets = new ArrayList<>();
-                            for (Ticket value : map.values()) {
-                                if (value.isSolved() == false) {
-                                    tickets.add(value);
+                                ArrayList<Ticket> tickets = new ArrayList<>();
+                                for (Ticket value : map.values()) {
+                                    if (value.isSolved() == false) {
+                                        tickets.add(value);
+                                    }
                                 }
+                                for (Ticket ticket : tickets) {
+                                    emb.addField(ticket.getTicketId().toString(), ticket.getTopic(), false);
+                                }
+                                emb.setTitle("Open tickets")
+                                    .setColor(0xff55ff)
+                                    .setTimestamp(OffsetDateTime.now());
+                                event.replyEmbeds(emb.build())
+                                    .addActionRow(
+                                        Button.secondary("refresh", Emoji.fromUnicode("U+1F504")))
+                                    .queue();
                             }
-                            for (Ticket ticket : tickets) {
-                                emb.addField(ticket.getTicketId().toString(), ticket.getTopic(), false);
-                            }
-                            emb.setTitle("Open tickets")
-                                .setColor(0xff55ff)
-                                .setTimestamp(OffsetDateTime.now());
-                            event.replyEmbeds(emb.build())
-                                .addActionRow(
-                                    Button.secondary("refresh", Emoji.fromUnicode("U+1F504")))
-                                .queue();
+                        } catch (FileNotFoundException e) {
+                            event.reply("There are no tickets avlaible").setEphemeral(true).queue();
+                            e.printStackTrace();
+                        } catch (ClassCastException e) {
+                            event.reply("There are no tickets avlaible").setEphemeral(true).queue();
+                            e.printStackTrace();
+                        } catch (InvalidDefinitionException e) {
+                            event.reply("There are no tickets avlaible").setEphemeral(true).queue();
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    } catch (FileNotFoundException e) {
-                        event.reply("There are no tickets avlaible").setEphemeral(true).queue();
-                        e.printStackTrace();
-                    } catch (ClassCastException e) {
-                        event.reply("There are no tickets avlaible").setEphemeral(true).queue();
-                        e.printStackTrace();
-                    } catch (InvalidDefinitionException e) {
-                        event.reply("There are no tickets avlaible").setEphemeral(true).queue();
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } else {
+                        event.reply("You can only call this method in the channels "
+                                + event.getGuild().getTextChannelById("1122870579809243196").getAsMention() + ", " + event.getGuild().getTextChannelById("1059792277452623872").getAsMention() + ", " + event.getGuild().getTextChannelById("1062121062067863602").getAsMention() + " or " + event.getGuild().getTextChannelById("1125757185113198645").getAsMention())
+                                .setEphemeral(true)
+                                .queue();
                     }
                 } else {
-                    event.reply("You can only call this method in the channels "
-                            + event.getGuild().getTextChannelById("1122870579809243196").getAsMention() + ", " + event.getGuild().getTextChannelById("1059792277452623872").getAsMention() + ", " + event.getGuild().getTextChannelById("1062121062067863602").getAsMention() + " or " + event.getGuild().getTextChannelById("1125757185113198645").getAsMention())
-                            .setEphemeral(true)
-                            .queue();
+                    event.reply("You do not have the necessary permissions for this action").setEphemeral(true).queue();
                 }
-            } else {
-                event.reply("You do not have the necessary permissions for this action").setEphemeral(true).queue();
             }
         }
     }
