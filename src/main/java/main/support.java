@@ -84,8 +84,7 @@ public class support extends ListenerAdapter {
                                                 + OffsetDateTime.now().format(dtf));
                                         event.replyEmbeds(emb.build())
                                             .addActionRow(
-                                                Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
-                                                Button.primary("reply", "reply"))
+                                                Button.secondary("refresh", Emoji.fromUnicode("U+1F504")))
                                             .queue();
                                     } else {
                                         emb.setTitle(ticketId.toString())
@@ -96,8 +95,7 @@ public class support extends ListenerAdapter {
                                         event.replyEmbeds(emb.build())
                                             .addActionRow(
                                                 Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
-                                                Button.danger("close", "close ticket"),
-                                                Button.primary("reply", "reply"))
+                                                Button.danger("close", "close ticket"))
                                             .queue();
                                     }
                                 } else {
@@ -165,8 +163,7 @@ public class support extends ListenerAdapter {
                                                 + OffsetDateTime.now().format(dtf));
                                         event.replyEmbeds(emb.build())
                                             .addActionRow(
-                                                Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
-                                                Button.primary("reply", "reply"))
+                                                Button.secondary("refresh", Emoji.fromUnicode("U+1F504")))
                                             .queue();
                                     } else {
                                         emb.setTitle(ticketId.toString())
@@ -177,8 +174,7 @@ public class support extends ListenerAdapter {
                                         event.replyEmbeds(emb.build())
                                             .addActionRow(
                                                 Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
-                                                Button.danger("close", "close ticket"),
-                                                Button.primary("reply", "reply"))
+                                                Button.danger("close", "close ticket"))
                                             .queue();
                                     }
                                 } else {
@@ -281,8 +277,7 @@ public class support extends ListenerAdapter {
                             .queue();
                         message.editMessageComponents(
                             ActionRow.of(
-                                Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
-                                Button.primary("reply", "reply")))
+                                Button.secondary("refresh", Emoji.fromUnicode("U+1F504"))))
                         .queue();
                         event.reply(
                             "The ticket with the ID **" + ticketId
@@ -348,7 +343,7 @@ public class support extends ListenerAdapter {
                                     + ticket.getTimeClosed())
                                 .setTimestamp(OffsetDateTime.now())
                                 .build())
-                        .setActionRow(Button.secondary("refresh", Emoji.fromUnicode("U+1F504")), Button.primary("reply", "reply")).queue();
+                        .setActionRow(Button.secondary("refresh", Emoji.fromUnicode("U+1F504"))).queue();
                     } else {
                         event.deferEdit().setEmbeds(
                             emb.setTitle(ticketId.toString())
@@ -358,7 +353,7 @@ public class support extends ListenerAdapter {
                                 .setFooter("Ticket opened " + ticket.getTimeSubmitted())
                                 .setTimestamp(OffsetDateTime.now())
                                 .build())
-                        .setActionRow(Button.secondary("refresh", Emoji.fromUnicode("U+1F504")), Button.danger("close", "close ticket"), Button.primary("reply", "reply")).queue();
+                        .setActionRow(Button.secondary("refresh", Emoji.fromUnicode("U+1F504")), Button.danger("close", "close ticket")).queue();
                     }
                 } catch (NullPointerException e) {
                     event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
@@ -366,37 +361,6 @@ public class support extends ListenerAdapter {
                     e.printStackTrace();
                 }
             }
-        }
-
-        if (event.getComponentId().equals("reply")) {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<Integer, Ticket> tickets = new HashMap<Integer, Ticket>();
-            Message messageOG = event.getMessage();
-            String topic = messageOG.getEmbeds().get(0).getFields().get(0).getValue();
-            Integer ticketId = Integer.parseInt((messageOG.getEmbeds().get(0).getTitle().split(" "))[0]);
-            
-            try {
-                tickets = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            Ticket ticket =  tickets.get(ticketId);
-            User user = event.getJDA().retrieveUserById(ticket.getUserId()).complete();
-
-            TextInput message = TextInput.create("message", "Reply to " + user.getName(), TextInputStyle.PARAGRAPH)
-                    .setPlaceholder("Your message")
-                    .setMinLength(1)
-                    .setMaxLength(1000)
-                    .setRequired(true)
-                    .build();
-
-            Modal modal = Modal.create("reply", ticketId.toString())
-                    .addActionRows(ActionRow.of(message))
-                    .build();
-
-            event.replyModal(modal).queue();
         }
     }
 
@@ -474,13 +438,6 @@ public class support extends ListenerAdapter {
                     Button.danger("close", "close ticket"),
                     Button.primary("reply", "reply"))
                 .queue();
-        }
-
-        if (event.getModalId().equals("reply")) {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<Integer, TicketReply> ticketsReplies = new HashMap<Integer, TicketReply>();
-            Map<Integer, TicketReply> ticketReplyIdMap = new HashMap<Integer, TicketReply>();
-            Integer ticketReplyId;
         }
     }
 }
