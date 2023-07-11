@@ -75,7 +75,8 @@ public class support extends ListenerAdapter {
                                 if (ticket.isSolved() == true) {
                                     emb.setTitle(ticketId.toString())
                                         .setColor(0xff55ff)
-                                        .setAuthor("Closed \u2022 " + user.getAsTag())
+                                        .setAuthor("Closed")
+                                        .setDescription(user.getAsMention())
                                         .addField("Topic", ticket.getTopic(), false)
                                         .addField("Message", ticket.getMessage(), false)
                                         .setFooter("Time opened " + ticket.getTimeSubmitted()
@@ -89,7 +90,7 @@ public class support extends ListenerAdapter {
                                 } else {
                                     emb.setTitle(ticketId.toString())
                                         .setColor(0xff55ff)
-                                        .setAuthor(user.getAsTag())
+                                        .setDescription(user.getAsMention())
                                         .addField("Topic", ticket.getTopic(), false)
                                         .addField("Message", ticket.getMessage(), false)
                                         .setFooter("Ticket opened " + ticket.getTimeSubmitted());
@@ -200,7 +201,8 @@ public class support extends ListenerAdapter {
                         message.editMessageEmbeds(
                             emb.setTitle(ticketId.toString())
                                 .setColor(0xff55ff)
-                                .setAuthor("Closed \u2022 " + user.getAsTag())
+                                .setAuthor("Closed")
+                                .setDescription(user.getAsMention())
                                 .addField("Topic", ticket.getTopic(), false)
                                 .addField("Message", ticket.getMessage(), false)
                                 .setFooter("Time opened " + ticket.getTimeSubmitted()
@@ -269,7 +271,8 @@ public class support extends ListenerAdapter {
                         event.deferEdit().setEmbeds(
                             emb.setTitle(ticketId.toString())
                                 .setColor(0xff55ff)
-                                .setAuthor("Closed \u2022 " + user.getAsTag())
+                                .setAuthor("Closed")
+                                .setDescription(user.getAsMention())
                                 .addField("Topic", ticket.getTopic(), false)
                                 .addField("Message", ticket.getMessage(), false)
                                 .setFooter("Time opened " + ticket.getTimeSubmitted()
@@ -282,7 +285,7 @@ public class support extends ListenerAdapter {
                         event.deferEdit().setEmbeds(
                             emb.setTitle(ticketId.toString())
                                 .setColor(0xff55ff)
-                                .setAuthor(user.getAsTag())
+                                .setDescription(user.getAsMention())
                                 .addField("Topic", ticket.getTopic(), false)
                                 .addField("Message", ticket.getMessage(), false)
                                 .setFooter("Ticket opened " + ticket.getTimeSubmitted())
@@ -396,6 +399,7 @@ public class support extends ListenerAdapter {
 
         if (event.getModalId().equals("reply")) {
             Integer ticketId;
+            event.getModalId().
             ObjectMapper mapper = new ObjectMapper();
             Map<Integer, TicketReply> ticketsReplies = new HashMap<Integer, TicketReply>();
             Map<Integer, TicketReply> ticketReplyIdMap = new HashMap<Integer, TicketReply>();
