@@ -62,7 +62,7 @@ public class help extends ListenerAdapter {
                         .addField("</rules:1125414321204236330>", "Display server rules", false)
                         .addField("</ip:1125414321204236335>", "Get Minecraft Server IP", false)
                         .addField("</website:1125414321204236329>", "Get the link to our Website", false)
-                        .addField("</socials:1125414321204236330>", "Display server rules", false)
+                        .addField("</socials:1128062793778724904>", "Display server rules", false)
                         .addField("</userinfo:1125414321204236331>", "Get info on a user", false)
                         .addField("</pronouns:1125414321359421471>", "Select your pronouns", false)
                         .addField("</colour:1125414321359421472>", "The colour you want to be displayed as", false)
@@ -98,8 +98,8 @@ public class help extends ListenerAdapter {
                                 .build()),
                         ActionRow.of(
                             Button.primary("ticket", "Support ticket").withEmoji(Emoji.fromUnicode("U+1F3AB")), 
-                            Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false)),
-                            Button.link("http://lxbs.online/support", "lxbs.online/support").withEmoji(Emoji.fromCustom("support", supportId, false))))
+                            Button.link("http://lxbs.online/support", "lxbs.online/support").withEmoji(Emoji.fromCustom("support", supportId, false)),
+                            Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false))))
                     .queue();
             }
         }
