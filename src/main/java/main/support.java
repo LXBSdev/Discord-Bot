@@ -403,5 +403,23 @@ public class support extends ListenerAdapter {
                     Button.primary("reply", "reply"))
                 .queue();
         }
+
+        if (event.getModalId().equals("reply")) {
+            ObjectMapper mapper = new ObjectMapper();
+            Map<Integer, TicketReply> ticketsReplies = new HashMap<Integer, TicketReply>();
+            Map<Integer, TicketReply> ticketReplyIdMap = new HashMap<Integer, TicketReply>();
+            Integer ticketReplyId;
+
+            try {
+                ticketReplyIdMap = mapper.readValue(new File(ticketReplyId + ".json"), new TypeReference<Map<String, TicketReplyId>>() {});
+                ticketId.setTicketId(ticketIdMap.get("Ticket ID").getTicketId() + 1);
+                ticketIdMap.put("Ticket ID", ticketId);
+            } catch (FileNotFoundException e) {
+                ticketId.setTicketId(1);
+                ticketIdMap.put("Ticket ID", ticketId);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
