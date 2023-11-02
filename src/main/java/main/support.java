@@ -39,10 +39,6 @@ public class support extends ListenerAdapter {
     DateTimeFormatter DateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     String globalTicketId;
 
-    @Override
-    public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
-
-    }
 
     @Override
     public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
