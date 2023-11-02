@@ -1,0 +1,5 @@
+.env
+tickets.json
+ticketId.json
+.vscode
+.idea
