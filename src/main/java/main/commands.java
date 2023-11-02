@@ -1,5 +1,10 @@
 package main;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -7,12 +12,21 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
 public class commands extends ListenerAdapter {
+
+    DateTimeFormatter DateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     private String getActivities(List<Activity> activitiesList) {
         String activitie = "";
@@ -244,6 +258,111 @@ public class commands extends ListenerAdapter {
                     Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false))
                     )
                 .setEphemeral(true).queue();
+        }
+
+        if (event.getName().equals("support")) {
+            EmbedBuilder emb = new EmbedBuilder();
+            Long lxbsId = Long.parseLong("1118108459431374898");
+            Long supportId = Long.parseLong("1127962706499088424");
+
+            emb.setTitle("Support? Sure.")
+                    .setColor(0xff55ff)
+                    .setDescription("Welcome to the support center.\nIf you have a problem or question you can submit a support Ticket.")
+                    .addField("Email", "support@lxbs.online", true)
+                    .addField("Website", "https://lxbs.online", true)
+                    .setFooter("LXBS Support", "https://cdn.discordapp.com/attachments/837779743486378075/1122872440872247437/logo-magenta.png");
+
+            event.replyEmbeds(emb.build()).addActionRow(
+                            Button.primary("ticket", "Support ticket").withEmoji(Emoji.fromUnicode("U+1F3AB")),
+                            Button.link("http://lxbs.online/support", "lxbs.online/support").withEmoji(Emoji.fromCustom("support", supportId, false)),
+                            Button.link("http://lxbs.online", "lxbs.online").withEmoji(Emoji.fromCustom("lxbs", lxbsId, false)))
+                    .setEphemeral(true).queue();
+        }
+
+        if (event.getName().equals("ticket")) {
+            if (!event.getGuild().getId().equals("1057684150527733880")) {
+                if (event.getMember().getRoles().toString().contains("Admin")) {
+                    if (event.getChannel().getId().equals("1122870579809243196") | event.getChannel().getId().equals("1059792277452623872") | event.getChannel().getId().equals("1062121062067863602") | event.getChannel().getId().equals("1125757185113198645")) {
+                        ObjectMapper mapper = JsonMapper.builder()
+                                .addModule(new JavaTimeModule())
+                                .build();
+                        Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
+                        EmbedBuilder emb = new EmbedBuilder();
+                        try {
+                            map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {});
+                            if (event.getOption("ticket-id") != null) {
+                                Integer ticketId = event.getOption("ticket-id").getAsInt();
+                                if (map.containsKey(ticketId)) {
+                                    Ticket ticket = map.get(ticketId);
+                                    String userId = ticket.getUserId();
+                                    User user = event.getJDA().retrieveUserById(userId).complete();
+                                    if (ticket.isSolved()) {
+                                        emb.setTitle(ticketId + " \u2022 Closed")
+                                                .setColor(0xff55ff)
+                                                .setDescription(user.getAsMention())
+                                                .addField("Topic", ticket.getTopic(), false)
+                                                .addField("Message", ticket.getMessage(), false)
+                                                .addField("Time ", String.format("%d h %d m", ticket.getTimeWorkedOn().toHours(), ticket.getTimeWorkedOn().toMinutes()), false)
+                                                .setFooter("Time opened " + ticket.getTimeSubmitted().format(DateTimeFormat)
+                                                        + " \u2022 Time closed "
+                                                        + OffsetDateTime.now().format(DateTimeFormat));
+                                        event.replyEmbeds(emb.build())
+                                                .addActionRow(
+                                                        Button.secondary("refresh", Emoji.fromUnicode("U+1F504")))
+                                                .queue();
+                                    } else {
+                                        emb.setTitle(ticketId.toString())
+                                                .setColor(0xff55ff)
+                                                .setDescription(user.getAsMention())
+                                                .addField("Topic", ticket.getTopic(), false)
+                                                .addField("Message", ticket.getMessage(), false)
+                                                .setFooter("Ticket opened " + ticket.getTimeSubmitted().format(DateTimeFormat));
+                                        event.replyEmbeds(emb.build())
+                                                .addActionRow(
+                                                        Button.secondary("refresh", Emoji.fromUnicode("U+1F504")),
+                                                        Button.danger("close", "close ticket"),
+                                                        Button.primary("reply", "reply"))
+                                                .queue();
+                                    }
+                                } else {
+                                    event.reply("No ticket could be found with the Id").setEphemeral(true).queue();
+                                }
+                            } else {
+                                ArrayList<Ticket> tickets = new ArrayList<>();
+                                for (Ticket value : map.values()) {
+                                    if (!value.isSolved()) {
+                                        tickets.add(value);
+                                    }
+                                }
+                                for (Ticket ticket : tickets) {
+                                    emb.addField(ticket.getTicketId().toString(), ticket.getTopic(), false);
+                                }
+                                emb.setTitle("Open tickets")
+                                        .setColor(0xff55ff)
+                                        .setTimestamp(OffsetDateTime.now());
+                                event.replyEmbeds(emb.build())
+                                        .addActionRow(
+                                                Button.secondary("refresh", Emoji.fromUnicode("U+1F504")))
+                                        .queue();
+                            }
+                        } catch (FileNotFoundException | InvalidDefinitionException | ClassCastException e) {
+                            event.reply("There are no tickets available").setEphemeral(true).queue();
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        event.reply("You can only call this method in the channels "
+                                        + event.getGuild().getTextChannelById("1122870579809243196").getAsMention() + ", " + event.getGuild().getTextChannelById("1059792277452623872").getAsMention() + ", " + event.getGuild().getTextChannelById("1062121062067863602").getAsMention() + " or " + event.getGuild().getTextChannelById("1125757185113198645").getAsMention())
+                                .setEphemeral(true)
+                                .queue();
+                    }
+                } else {
+                    event.reply("You don't have permission to do that!").setEphemeral(true).queue();
+                }
+            } else {
+                event.reply("You aren't in the right server for that!").setEphemeral(true).queue();
+            }
         }
     }
 }
