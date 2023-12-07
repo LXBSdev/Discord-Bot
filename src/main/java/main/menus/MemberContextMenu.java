@@ -1,48 +1,47 @@
-package main;
+package main.menus;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
-import javax.annotation.Nonnull;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 
-public class contextMenu extends ListenerAdapter {
+public class MemberContextMenu extends ListenerAdapter {
 
     private String getActivities(List<Activity> activitiesList) {
-        String activitie = "";
+        StringBuilder activitie = new StringBuilder();
         if (!activitiesList.isEmpty()) {
             Activity tempActiv = (Activity) activitiesList.get(0);
             for (int i = 1; i < activitiesList.size(); i++) {
                 tempActiv = (Activity) activitiesList.get(i);
-                activitie = activitie + ", " + tempActiv;
+                activitie.append(", ").append(tempActiv);
             }
         } else {
-            activitie = "No activitie";
+            activitie = new StringBuilder("No activitie");
         }
-        return activitie;
+        return activitie.toString();
     }
 
     private String getRolesAsString(List<Role> rolesList) {
-        String roles = "";
+        StringBuilder roles = new StringBuilder();
         if (!rolesList.isEmpty()) {
             Role tempRole = (Role) rolesList.get(0);
-            roles = tempRole.getAsMention();
+            roles = new StringBuilder(tempRole.getAsMention());
             for (int i = 1; i < rolesList.size(); i++) {
                 tempRole = (Role) rolesList.get(i);
-                roles = roles + ", " + tempRole.getAsMention();
+                roles.append(", ").append(tempRole.getAsMention());
             }
         } else {
-            roles = "No roles";
+            roles = new StringBuilder("No roles");
         }
-        return roles;
+        return roles.toString();
     }
 
     @Override
-    public void onUserContextInteraction(@Nonnull UserContextInteractionEvent event) {
+    public void onUserContextInteraction(@NotNull UserContextInteractionEvent event) {
         if (event.getName().equals("Get user information")) {
             User user = event.getTarget();
             Member member = event.getTargetMember();
@@ -54,7 +53,7 @@ public class contextMenu extends ListenerAdapter {
             emb.setDescription(user.getName() + " joined on " + member.getTimeJoined().format(fmt));
             emb.setColor(member.getColor());
             emb.setThumbnail(user.getAvatarUrl());
-            emb.setAuthor("Information on " + user.getAsMention().toString());
+            emb.setAuthor("Information on " + user.getAsMention());
             emb.addField("Nickname: ", member.getNickname() == null ? "No Nickname" : member.getNickname(), false);
             emb.addField("Status: ", member.getOnlineStatus().toString(), false);
             emb.addField("Game: ", getActivities(member.getActivities()), false);

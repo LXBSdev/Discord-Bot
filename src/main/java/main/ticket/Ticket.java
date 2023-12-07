@@ -1,4 +1,4 @@
-package main;
+package main.ticket;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -38,13 +38,13 @@ public class Ticket implements Serializable {
             this.timeWorkedOn = timeWorkedOn;
     }
 
-    void setSolvedTrue() {
+    public void setSolvedTrue() {
         solved = true;
     }
-    void setSolvedTime(OffsetDateTime timeClosed) {
+    public void setSolvedTime(OffsetDateTime timeClosed) {
         this.timeClosed = timeClosed;
     }
-    void setTimeWorkedOn(Duration timeWorkedOn) {
+    public void setTimeWorkedOn(Duration timeWorkedOn) {
         this.timeWorkedOn = timeWorkedOn;
     }
     public Boolean isSolved() {

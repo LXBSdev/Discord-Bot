@@ -1,9 +1,7 @@
-package main;
+package main.command;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.Nonnull;
 
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
@@ -13,11 +11,12 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.jetbrains.annotations.NotNull;
 
-public class commandRegister extends ListenerAdapter {
+public class CommandRegister extends ListenerAdapter {
 
         @Override
-        public void onGuildReady(@Nonnull GuildReadyEvent event) {
+        public void onGuildReady(@NotNull GuildReadyEvent event) {
                 List<CommandData> commandData = new ArrayList<>();
                 commandData.add(Commands.slash("help", "Get help"));
                 commandData.add(Commands.slash("website", "Get the link to our Website"));
@@ -51,7 +50,7 @@ public class commandRegister extends ListenerAdapter {
         }
 
         @Override
-        public void onGuildJoin(@Nonnull GuildJoinEvent event) {
+        public void onGuildJoin(@NotNull GuildJoinEvent event) {
                 List<CommandData> commandData = new ArrayList<>();
                 commandData.add(Commands.slash("help", "Get help"));
                 commandData.add(Commands.slash("website", "Get the link to our Website"));

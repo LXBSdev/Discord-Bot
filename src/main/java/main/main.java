@@ -1,5 +1,15 @@
 package main;
 
+import main.buttons.CloseButton;
+import main.buttons.RefreshButton;
+import main.buttons.ReplyButton;
+import main.buttons.TicketButton;
+import main.command.*;
+import main.listeners.MemberJoinListener;
+import main.menus.HelpSelectMenu;
+import main.menus.MemberContextMenu;
+import main.modals.ReplyModal;
+import main.modals.TicketModal;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -23,8 +33,7 @@ public class main {
         builder.setStatus(OnlineStatus.ONLINE);
         builder.setActivity(Activity.playing(status));
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES);
-        builder.addEventListeners(new support(), new welcome(), new commands(), new contextMenu(),
-                new commandRegister(), new help());
+        builder.addEventListeners(new CloseButton(), new RefreshButton(), new ReplyButton(), new TicketButton(), new ColourCommand(), new CommandRegister(), new HelloCommand(), new HelpCommand(), new IPCommand(), new PronounsCommand(), new RulesCommand(), new SocialsCommand(), new SupportCommand(), new TicketCommand(), new UserInfoCommand(), new WebsiteCommand(), new MemberJoinListener(), new HelpSelectMenu(), new MemberContextMenu(), new ReplyModal(), new TicketModal());
         shardManager = builder.build();
     }
 
