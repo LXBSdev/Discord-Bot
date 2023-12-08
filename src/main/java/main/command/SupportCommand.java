@@ -20,7 +20,7 @@ public class SupportCommand extends ListenerAdapter {
                     .setColor(0xff55ff)
                     .setDescription("Welcome to the support center.\nIf you have a problem or question you can submit a support Ticket.")
                     .addField("Email", "support@lxbs.online", true)
-                    .addField("Website", "https://lxbs.online", true)
+                    .addField("Website", "[lxbs.online](https://lxbs.online)", true)
                     .setFooter("LXBS Support", "https://cdn.discordapp.com/attachments/837779743486378075/1122872440872247437/logo-magenta.png");
 
             event.replyEmbeds(emb.build()).addActionRow(
