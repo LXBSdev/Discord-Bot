@@ -33,7 +33,30 @@ public class main {
         builder.setStatus(OnlineStatus.ONLINE);
         builder.setActivity(Activity.playing(status));
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES);
-        builder.addEventListeners(new CloseButton(), new RefreshButton(), new ReplyButton(), new TicketButton(), new ColourCommand(), new CommandRegister(), new HelloCommand(), new HelpCommand(), new IPCommand(), new PronounsCommand(), new RulesCommand(), new SocialsCommand(), new SupportCommand(), new TicketCommand(), new UserInfoCommand(), new WebsiteCommand(), new MemberJoinListener(), new HelpSelectMenu(), new MemberContextMenu(), new ReplyModal(), new TicketModal());
+        builder.addEventListeners(
+                new CloseButton(),
+                new RefreshButton(),
+                new ReplyButton(),
+                new TicketButton(),
+                new ColourCommand(),
+                new CommandRegister(),
+                new HelloCommand(),
+                new HelpCommand(),
+                new IPCommand(),
+                new PronounsCommand(),
+                new RulesCommand(),
+                new SocialsCommand(),
+                new SupportCommand(),
+                new TicketCommand(),
+                new UserInfoCommand(),
+                new WebsiteCommand(),
+                new MemberJoinListener(),
+                new HelpSelectMenu(),
+                new MemberContextMenu(),
+                new ReplyModal(),
+                new TicketModal(),
+                new SendMessageCommand()
+        );
         shardManager = builder.build();
     }
 

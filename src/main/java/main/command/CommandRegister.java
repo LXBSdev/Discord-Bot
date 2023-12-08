@@ -46,6 +46,10 @@ public class CommandRegister extends ListenerAdapter {
                                 .addOptions(colour));
                 commandData.add(Commands.context(Command.Type.USER, "Get user information"));
                 commandData.add(Commands.slash("socials", "View our social profiles"));
+                commandData.add(Commands.slash("sendmessage", "Send a message to a channel")
+                        .addOptions(new OptionData(OptionType.CHANNEL, "channel", "The channel", true))
+                        .addOptions(new OptionData(OptionType.STRING, "message", "The message", true))
+                        .addOptions(new OptionData(OptionType.BOOLEAN, "showauthor", "Show the author", true)));
                 event.getGuild().updateCommands().addCommands(commandData).queue();
         }
 
@@ -80,6 +84,10 @@ public class CommandRegister extends ListenerAdapter {
                                 .addOptions(colour));
                 commandData.add(Commands.context(Command.Type.USER, "Get user information"));
                 commandData.add(Commands.slash("socials", "View our social profiles"));
+                commandData.add(Commands.slash("sendmessage", "Send a message to a channel")
+                        .addOptions(new OptionData(OptionType.CHANNEL, "channel", "The channel"))
+                        .addOptions(new OptionData(OptionType.STRING, "message", "The message"))
+                        .addOptions(new OptionData(OptionType.BOOLEAN, "show author", "Show the author")));
                 event.getGuild().updateCommands().addCommands(commandData).queue();
         }
 }
