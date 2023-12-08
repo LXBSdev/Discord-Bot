@@ -32,7 +32,7 @@ public class ReplyModal extends ListenerAdapter {
             Map<Integer, Ticket> map = new HashMap<>();
             Integer localTicketId = Integer.parseInt(ticketId);
             EmbedBuilder emb = new EmbedBuilder();
-            String message = Objects.requireNonNull(event.getValue("message")).toString();
+            String message = Objects.requireNonNull(event.getValue("message")).getAsString();
 
             User admin = event.getUser();
 
