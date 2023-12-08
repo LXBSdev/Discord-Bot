@@ -50,6 +50,9 @@ public class CommandRegister extends ListenerAdapter {
                         .addOptions(new OptionData(OptionType.CHANNEL, "channel", "The channel", true))
                         .addOptions(new OptionData(OptionType.STRING, "message", "The message", true))
                         .addOptions(new OptionData(OptionType.BOOLEAN, "showauthor", "Show the author", true)));
+                commandData.add(Commands.slash("addusertoticket", "Add user to ticket")
+                        .addOptions(new OptionData(OptionType.USER, "user", "The user to add", true))
+                        .addOptions(new OptionData(OptionType.INTEGER, "ticketid", "The ticket to add to", true)));
                 event.getGuild().updateCommands().addCommands(commandData).queue();
         }
 
@@ -88,6 +91,9 @@ public class CommandRegister extends ListenerAdapter {
                         .addOptions(new OptionData(OptionType.CHANNEL, "channel", "The channel"))
                         .addOptions(new OptionData(OptionType.STRING, "message", "The message"))
                         .addOptions(new OptionData(OptionType.BOOLEAN, "show author", "Show the author")));
+                commandData.add(Commands.slash("addusertoticket", "Add user to ticket")
+                        .addOptions(new OptionData(OptionType.USER, "user", "The user to add", true))
+                        .addOptions(new OptionData(OptionType.INTEGER, "ticketid", "The ticket to add to", true)));
                 event.getGuild().updateCommands().addCommands(commandData).queue();
         }
 }

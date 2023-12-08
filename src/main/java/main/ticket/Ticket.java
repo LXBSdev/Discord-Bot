@@ -3,6 +3,7 @@ package main.ticket;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Ticket implements Serializable {
     private Boolean solved;
     private Integer ticketId;
-    private String userId;
+    private List<String> userId;
     private String topic;
     private String message;
     private OffsetDateTime timeSubmitted;
@@ -21,7 +22,7 @@ public class Ticket implements Serializable {
     public Ticket (
         @JsonProperty("solved") Boolean solved,
         @JsonProperty("ticketId") Integer ticketId,
-        @JsonProperty("userId") String userId,
+        @JsonProperty("userId") List<String> userId,
         @JsonProperty("topic") String topic,
         @JsonProperty("message") String message,
         @JsonProperty("timeSubmitted") OffsetDateTime timeSubmitted,
@@ -47,13 +48,16 @@ public class Ticket implements Serializable {
     public void setTimeWorkedOn(Duration timeWorkedOn) {
         this.timeWorkedOn = timeWorkedOn;
     }
+    public void addUserId(String userId) {
+        this.userId.add(userId);
+    }
     public Boolean isSolved() {
         return solved;
     }
     public Integer getTicketId() {
         return ticketId;
     }
-    public String getUserId() {
+    public List<String> getUserId() {
         return userId;
     }
     public String getTopic() {

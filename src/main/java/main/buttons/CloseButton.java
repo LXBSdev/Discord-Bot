@@ -21,9 +21,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class CloseButton extends ListenerAdapter {
 
@@ -51,8 +49,11 @@ public class CloseButton extends ListenerAdapter {
                         ticket.setSolvedTime(OffsetDateTime.now());
                         ticket.setTimeWorkedOn(Duration.between(ticket.getTimeSubmitted(), ticket.getTimeClosed()));
                         map.put(ticketId, ticket);
-                        String userId = ticket.getUserId();
-                        User user = event.getJDA().retrieveUserById(userId).complete();
+                        List<String> userId = ticket.getUserId();
+                        List<User> user = new ArrayList<>();
+                        for (String i : userId) user.add(event.getJDA().retrieveUserById(i).complete());
+                        StringBuilder stringMention = new StringBuilder();
+                        for (User i : user) stringMention.append(i.getAsMention()).append(", ");
                         EmbedBuilder embUser = new EmbedBuilder();
 
                         embUser.setTitle("Ticket solved")
@@ -62,11 +63,11 @@ public class CloseButton extends ListenerAdapter {
                                 .setFooter("Time opened " + ticket.getTimeSubmitted().format(DateTimeFormat)
                                         + " • Time closed " + OffsetDateTime.now().format(DateTimeFormat));
 
-                        user.openPrivateChannel().flatMap(channel -> channel.sendMessageEmbeds(embUser.build())).queue();
+                        for (User i : user) i.openPrivateChannel().flatMap(channel -> channel.sendMessageEmbeds(embUser.build())).queue();
                         message.editMessageEmbeds(
                                         emb.setTitle(ticketId + " • Closed")
                                                 .setColor(0xff55ff)
-                                                .setDescription(user.getAsMention())
+                                                .setDescription(stringMention)
                                                 .addField("Topic", ticket.getTopic(), false)
                                                 .addField("Message", ticket.getMessage(), false)
                                                 .addField("Time", String.format("%d h %d m", ticket.getTimeWorkedOn().toHours(), ticket.getTimeWorkedOn().toMinutes()), false)

@@ -20,9 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class TicketModal extends ListenerAdapter {
 
@@ -35,8 +33,8 @@ public class TicketModal extends ListenerAdapter {
             String message = Objects.requireNonNull(event.getValue("message")).getAsString();
             User user = event.getUser();
             TicketId ticketId = new TicketId(1);
-            Map<Integer, Ticket> tickets = new HashMap<Integer, Ticket>();
-            Map<String, TicketId> ticketIdMap = new HashMap<String, TicketId>();
+            Map<Integer, Ticket> tickets = new HashMap<>();
+            Map<String, TicketId> ticketIdMap = new HashMap<>();
             EmbedBuilder emb = new EmbedBuilder();
             EmbedBuilder embUser = new EmbedBuilder();
             ObjectMapper mapper = JsonMapper.builder()
@@ -61,10 +59,13 @@ public class TicketModal extends ListenerAdapter {
                 e.printStackTrace();
             }
 
-            Ticket ticket = new Ticket(false, ticketId.getTicketId(), user.getId(), topic, message, OffsetDateTime.now(), null, null);
+            List<String> ticketIdArray = new ArrayList<>();
+            ticketIdArray.add(user.getId());
+
+            Ticket ticket = new Ticket(false, ticketId.getTicketId(), ticketIdArray, topic, message, OffsetDateTime.now(), null, null);
 
             try {
-                tickets = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {
+                tickets = mapper.readValue(new File("tickets.json"), new TypeReference<>() {
                 });
                 tickets.put(ticketId.getTicketId(), ticket);
             } catch (FileNotFoundException | MismatchedInputException e) {

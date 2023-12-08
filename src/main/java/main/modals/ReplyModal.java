@@ -14,9 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class ReplyModal extends ListenerAdapter {
 
@@ -43,7 +41,11 @@ public class ReplyModal extends ListenerAdapter {
             }
 
             Ticket ticket = map.get(localTicketId);
-            User user = event.getJDA().retrieveUserById(ticket.getUserId()).complete();
+            List<String> userId = ticket.getUserId();
+            List<User> user = new ArrayList<>();
+            for (String i : userId) user.add(event.getJDA().retrieveUserById(i).complete());
+            StringBuilder stringMention = new StringBuilder();
+            for (User i : user) stringMention.append(i.getAsMention()).append(", ");
 
             emb.setTitle("Ticket Reply" + ticketId)
                     .setColor(0xff55ff)
@@ -52,7 +54,7 @@ public class ReplyModal extends ListenerAdapter {
                     .addField("Message", message, false)
                     .setFooter("Ticket opened " + ticket.getTimeSubmitted().format(DateTimeFormat));
 
-            user.openPrivateChannel().flatMap(channel -> channel.sendMessageEmbeds(emb.build())).queue();
+            for (User i : user) i.openPrivateChannel().flatMap(channel -> channel.sendMessageEmbeds(emb.build())).queue();
 
             event.reply("Reply sent!").setEphemeral(true).queue();
         }

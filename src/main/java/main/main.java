@@ -55,7 +55,8 @@ public class main {
                 new MemberContextMenu(),
                 new ReplyModal(),
                 new TicketModal(),
-                new SendMessageCommand()
+                new SendMessageCommand(),
+                new AddUserToTicketCommand()
         );
         shardManager = builder.build();
     }
