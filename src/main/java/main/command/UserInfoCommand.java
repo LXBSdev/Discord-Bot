@@ -54,10 +54,10 @@ public class UserInfoCommand extends ListenerAdapter {
             EmbedBuilder emb = new EmbedBuilder();
 
             emb.setTitle("Member Info");
-            emb.setDescription(user.getName() + " joined on " + member.getTimeJoined().format(dtf));
+            emb.setDescription(user.getAsMention() + " joined on " + member.getTimeJoined().format(dtf));
             emb.setColor(member.getColor());
             emb.setThumbnail(user.getAvatarUrl());
-            emb.setAuthor("Information on " + user.getAsMention());
+            emb.setAuthor("Information on " + user.getName());
             emb.addField("Nickname: ", member.getNickname() == null ? "No Nickname" : member.getNickname(), false);
             emb.addField("Status: ", member.getOnlineStatus().toString(), false);
             emb.addField("Game: ", getActivities(member.getActivities()), false);
