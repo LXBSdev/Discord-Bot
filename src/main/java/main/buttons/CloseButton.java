@@ -45,7 +45,7 @@ public class CloseButton extends ListenerAdapter {
                     if (ticket.isSolved()) {
                         event.reply("This ticket is already closed.").setEphemeral(true).queue();
                     } else {
-                        ticket.setSolvedTrue();
+                        ticket.setSolved(true);
                         ticket.setSolvedTime(OffsetDateTime.now());
                         ticket.setTimeWorkedOn(Duration.between(ticket.getTimeSubmitted(), ticket.getTimeClosed()));
                         map.put(ticketId, ticket);

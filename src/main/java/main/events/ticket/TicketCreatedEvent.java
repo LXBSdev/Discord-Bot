@@ -1,4 +1,4 @@
-package main.events;
+package main.events.ticket;
 
 import main.ticket.Ticket;
 
@@ -10,12 +10,12 @@ public class TicketCreatedEvent extends EventObject {
     public TicketCreatedEvent(
             Object source,
             Ticket ticket
-    ){
+    ) {
         super(source);
         this.ticket = ticket;
     }
 
     public Ticket getTicket() {
-     return ticket;
+        return ticket;
     }
 }
