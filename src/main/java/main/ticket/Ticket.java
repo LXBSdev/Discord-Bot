@@ -8,8 +8,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import main.events.TicketCreatedEvent;
-import main.events.TicketCreatedListener;
+import main.events.ticket.TicketCreatedEvent;
+import main.events.ticket.TicketCreatedListener;
+import main.events.ticket.TicketSolvedEvent;
+import main.events.ticket.TicketSolvedListener;
 
 public class Ticket implements Serializable {
     private Boolean solved;
@@ -21,31 +23,33 @@ public class Ticket implements Serializable {
     private OffsetDateTime timeClosed;
     private Duration timeWorkedOn;
     private List<TicketCreatedListener> ticketCreatedListeners = new ArrayList<>();
+    private List<TicketSolvedListener> ticketSolvedListeners = new ArrayList<>();
 
     @JsonCreator
-    public Ticket (
-        @JsonProperty("solved") Boolean solved,
-        @JsonProperty("ticketId") Integer ticketId,
-        @JsonProperty("userId") List<String> userId,
-        @JsonProperty("topic") String topic,
-        @JsonProperty("message") String message,
-        @JsonProperty("timeSubmitted") OffsetDateTime timeSubmitted,
-        @JsonProperty("timeClosed") OffsetDateTime timeClosed,
-        @JsonProperty("timeWorkedOn") Duration timeWorkedOn
+    public Ticket(
+            @JsonProperty("solved") Boolean solved,
+            @JsonProperty("ticketId") Integer ticketId,
+            @JsonProperty("userId") List<String> userId,
+            @JsonProperty("topic") String topic,
+            @JsonProperty("message") String message,
+            @JsonProperty("timeSubmitted") OffsetDateTime timeSubmitted,
+            @JsonProperty("timeClosed") OffsetDateTime timeClosed,
+            @JsonProperty("timeWorkedOn") Duration timeWorkedOn
     ) {
-            this.solved = solved;
-            this.ticketId = ticketId;
-            this.userId = userId;
-            this.topic = topic;
-            this.message = message;
-            this.timeSubmitted = timeSubmitted;
-            this.timeClosed = timeClosed;
-            this.timeWorkedOn = timeWorkedOn;
-            ticketCreatedEvent(new TicketCreatedEvent(this, this));
+        this.solved = solved;
+        this.ticketId = ticketId;
+        this.userId = userId;
+        this.topic = topic;
+        this.message = message;
+        this.timeSubmitted = timeSubmitted;
+        this.timeClosed = timeClosed;
+        this.timeWorkedOn = timeWorkedOn;
+        ticketCreatedEvent(new TicketCreatedEvent(this, this));
     }
 
-    public void setSolvedTrue() {
-        solved = true;
+    public void setSolved(Boolean solved) {
+        this.solved = solved;
+        if(this.solved) ticketSolvedEvent(new TicketSolvedEvent(this, this));
     }
 
     public void setSolvedTime(OffsetDateTime timeClosed) {
@@ -54,14 +58,6 @@ public class Ticket implements Serializable {
 
     public void setTimeWorkedOn(Duration timeWorkedOn) {
         this.timeWorkedOn = timeWorkedOn;
-    }
-
-    public void addUserId(String userId) {
-        this.userId.add(userId);
-    }
-
-    public Boolean isSolved() {
-        return solved;
     }
 
     public Integer getTicketId() {
@@ -92,6 +88,14 @@ public class Ticket implements Serializable {
         return timeWorkedOn;
     }
 
+    public Boolean isSolved() {
+        return solved;
+    }
+
+    public void addUserId(String userId) {
+        this.userId.add(userId);
+    }
+
     public void addTicketCreatedListener(TicketCreatedListener listener) {
         ticketCreatedListeners.add(listener);
     }
@@ -101,8 +105,22 @@ public class Ticket implements Serializable {
     }
 
     public void ticketCreatedEvent(TicketCreatedEvent event) {
-        for(TicketCreatedListener listener : ticketCreatedListeners) {
+        for (TicketCreatedListener listener : ticketCreatedListeners) {
             listener.ticketCreated(event);
+        }
+    }
+
+    public void addTicketSolvedListener(TicketSolvedListener listener) {
+        ticketSolvedListeners.add(listener);
+    }
+
+    public void removeTicketSolvedListener(TicketSolvedListener listener) {
+        ticketSolvedListeners.remove(listener);
+    }
+
+    public void ticketSolvedEvent(TicketSolvedEvent event) {
+        for(TicketSolvedListener listener : ticketSolvedListeners) {
+            listener.ticketSolved(event);
         }
     }
 }
