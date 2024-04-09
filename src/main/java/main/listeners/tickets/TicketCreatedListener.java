@@ -1,11 +1,7 @@
 package main.listeners.tickets;
 
-import main.Main;
 import main.events.tickets.TicketCreatedEvent;
-import main.jda.JDA;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 

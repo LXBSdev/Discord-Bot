@@ -12,7 +12,6 @@ import main.events.tickets.TicketCreatedEvent;
 import main.events.tickets.TicketCreatedListener;
 import main.events.tickets.TicketSolvedEvent;
 import main.events.tickets.TicketSolvedListener;
-import main.jda.JDA;
 
 public class Ticket implements Serializable {
     private Boolean solved;
@@ -23,8 +22,8 @@ public class Ticket implements Serializable {
     private final OffsetDateTime timeSubmitted;
     private OffsetDateTime timeClosed;
     private Duration timeWorkedOn;
-    private List<TicketCreatedListener> ticketCreatedListeners = new ArrayList<>();
-    private List<TicketSolvedListener> ticketSolvedListeners = new ArrayList<>();
+    private final List<TicketCreatedListener> ticketCreatedListeners = new ArrayList<>();
+    private final List<TicketSolvedListener> ticketSolvedListeners = new ArrayList<>();
 
     @JsonCreator
     public Ticket(

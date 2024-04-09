@@ -6,16 +6,12 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import main.events.tickets.TicketCreatedEvent;
-import main.jda.JDA;
 import main.listeners.tickets.TicketCreatedListener;
 import main.ticket.Ticket;
 import main.ticket.TicketId;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -31,7 +27,7 @@ public class TicketModal extends ListenerAdapter {
     @Override
     public void onModalInteraction(@NotNull ModalInteractionEvent event) {
         if (!event.getModalId().equals("ticket")) return;
-        
+
         String topic = Objects.requireNonNull(event.getValue("topic")).getAsString();
         String message = Objects.requireNonNull(event.getValue("message")).getAsString();
         User user = event.getUser();

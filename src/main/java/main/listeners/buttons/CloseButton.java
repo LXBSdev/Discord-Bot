@@ -36,9 +36,9 @@ public class CloseButton extends ListenerAdapter {
             ObjectMapper mapper = JsonMapper.builder()
                     .addModule(new JavaTimeModule())
                     .build();
-            Map<Integer, Ticket> map = new HashMap<Integer, Ticket>();
+            Map<Integer, Ticket> map = new HashMap<>();
             try {
-                map = mapper.readValue(new File("tickets.json"), new TypeReference<Map<Integer, Ticket>>() {
+                map = mapper.readValue(new File("tickets.json"), new TypeReference<>() {
                 });
                 if (map.containsKey(ticketId)) {
                     Ticket ticket = map.get(ticketId);
