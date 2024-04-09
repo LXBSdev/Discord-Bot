@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import main.events.tickets.TicketCreatedEvent;
 import main.listeners.tickets.TicketCreatedListener;
+import main.listeners.tickets.TicketSolvedListener;
 import main.ticket.Ticket;
 import main.ticket.TicketId;
 import net.dv8tion.jda.api.entities.User;
@@ -61,6 +62,7 @@ public class TicketModal extends ListenerAdapter {
 
         Ticket ticket = new Ticket(false, ticketId.getTicketId(), ticketIdArray, topic, message, OffsetDateTime.now(), null, null);
         ticket.addTicketCreatedListener(new TicketCreatedListener());
+        ticket.addTicketSolvedListener(new TicketSolvedListener());
         ticket.ticketCreatedEvent(new TicketCreatedEvent(ticket, ticket, user, event));
 
         try {

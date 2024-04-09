@@ -20,7 +20,6 @@ public class Ticket implements Serializable {
     private OffsetDateTime timeClosed;
     private Duration timeWorkedOn;
     private final List<TicketCreatedListener> ticketCreatedListeners = new ArrayList<>();
-    private final List<TicketSolvedByModalListener> ticketSolvedByModalListeners = new ArrayList<>();
     private final List<TicketSolvedListener> ticketSolvedListeners = new ArrayList<>();
 
     @JsonCreator
@@ -117,20 +116,6 @@ public class Ticket implements Serializable {
 
     public void ticketSolvedEvent(TicketSolvedEvent event) {
         for(TicketSolvedListener listener : ticketSolvedListeners) {
-            listener.ticketSolved(event);
-        }
-    }
-
-    public void addTicketSolvedListener(TicketSolvedByModalListener listener) {
-        ticketSolvedByModalListeners.add(listener);
-    }
-
-    public void removeTicketSolvedListener(TicketSolvedByModalListener listener) {
-        ticketSolvedByModalListeners.remove(listener);
-    }
-
-    public void ticketSolvedEvent(TicketSolvedByModalEvent event) {
-        for(TicketSolvedByModalListener listener : ticketSolvedByModalListeners) {
             listener.ticketSolved(event);
         }
     }
