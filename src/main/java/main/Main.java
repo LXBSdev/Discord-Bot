@@ -1,11 +1,10 @@
 package main;
 
-import main.buttons.CloseButton;
-import main.buttons.RefreshButton;
-import main.buttons.ReplyButton;
-import main.buttons.TicketButton;
+import main.listeners.buttons.CloseButton;
+import main.listeners.buttons.RefreshButton;
+import main.listeners.buttons.ReplyButton;
+import main.listeners.buttons.TicketButton;
 import main.command.*;
-import main.jda.JDA;
 import main.listeners.MemberJoinListener;
 import main.menus.HelpSelectMenu;
 import main.menus.MemberContextMenu;

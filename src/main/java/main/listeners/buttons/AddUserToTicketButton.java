@@ -1,4 +1,4 @@
-package main.buttons;
+package main.listeners.buttons;
 
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
