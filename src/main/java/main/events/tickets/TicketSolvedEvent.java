@@ -1,13 +1,13 @@
-package main.events.ticket;
+package main.events.tickets;
 
 import main.ticket.Ticket;
 
 import java.util.EventObject;
 
-public class TicketCreatedEvent extends EventObject {
+public class TicketSolvedEvent extends EventObject {
     private static Ticket ticket;
 
-    public TicketCreatedEvent(
+    public TicketSolvedEvent(
             Object source,
             Ticket ticket
     ) {

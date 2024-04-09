@@ -43,15 +43,12 @@ public class TicketCommand extends ListenerAdapter {
                                 Integer ticketId = Objects.requireNonNull(event.getOption("ticket-id")).getAsInt();
                                 if (map.containsKey(ticketId)) {
                                     Ticket ticket = map.get(ticketId);
-                                    List<String> userId = ticket.getUserId();
-                                    List<User> user = new ArrayList<>();
-                                    for (String i : userId) user.add(event.getJDA().retrieveUserById(i).complete());
-                                    StringBuilder stringMention = new StringBuilder();
-                                    for (User i : user) stringMention.append(i.getAsMention()).append(", ");
+                                    List<String> user = new ArrayList<>();
+                                    for (String i : ticket.getUserId()) user.add(event.getJDA().retrieveUserById(i).complete().getAsMention());
                                     if (ticket.isSolved()) {
                                         emb.setTitle(ticketId + " • Closed")
                                                 .setColor(0xff55ff)
-                                                .setDescription(stringMention.toString())
+                                                .setDescription(String.join(",", user))
                                                 .addField("Topic", ticket.getTopic(), false)
                                                 .addField("Message", ticket.getMessage(), false)
                                                 .addField("Time ", String.format("%d h %d m", ticket.getTimeWorkedOn().toHours(), ticket.getTimeWorkedOn().toMinutes()), false)
@@ -65,7 +62,7 @@ public class TicketCommand extends ListenerAdapter {
                                     } else {
                                         emb.setTitle(ticketId.toString())
                                                 .setColor(0xff55ff)
-                                                .setDescription(stringMention)
+                                                .setDescription(String.join(",", user))
                                                 .addField("Topic", ticket.getTopic(), false)
                                                 .addField("Message", ticket.getMessage(), false)
                                                 .setFooter("Ticket opened " + ticket.getTimeSubmitted().format(DateTimeFormat));

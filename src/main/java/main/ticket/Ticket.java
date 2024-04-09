@@ -8,10 +8,11 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import main.events.ticket.TicketCreatedEvent;
-import main.events.ticket.TicketCreatedListener;
-import main.events.ticket.TicketSolvedEvent;
-import main.events.ticket.TicketSolvedListener;
+import main.events.tickets.TicketCreatedEvent;
+import main.events.tickets.TicketCreatedListener;
+import main.events.tickets.TicketSolvedEvent;
+import main.events.tickets.TicketSolvedListener;
+import main.jda.JDA;
 
 public class Ticket implements Serializable {
     private Boolean solved;
@@ -44,7 +45,6 @@ public class Ticket implements Serializable {
         this.timeSubmitted = timeSubmitted;
         this.timeClosed = timeClosed;
         this.timeWorkedOn = timeWorkedOn;
-        ticketCreatedEvent(new TicketCreatedEvent(this, this));
     }
 
     public void setSolved(Boolean solved) {
